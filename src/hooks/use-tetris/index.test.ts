@@ -21,7 +21,7 @@ test('init', () => {
   ).toBeTruthy()
   expect(result.current.next.length).toEqual(6)
   expect(result.current.score).toEqual(0)
-  expect(result.current.level).toEqual(0)
+  expect(result.current.level).toEqual(1)
   expect(result.current.paused).toBeFalsy()
 })
 
@@ -81,7 +81,7 @@ test('init when local storage does not match', () => {
   ).toBeTruthy()
   expect(result.current.next.length).toEqual(6)
   expect(result.current.score).toEqual(0)
-  expect(result.current.level).toEqual(0)
+  expect(result.current.level).toEqual(1)
   expect(result.current.paused).toBeFalsy()
 })
 
@@ -184,7 +184,7 @@ test('init from local storage', () => {
     TetrisBlock.Z,
   ])
   expect(result.current.score).toEqual(42)
-  expect(result.current.level).toEqual(7)
+  expect(result.current.level).toEqual(8)
   expect(result.current.isGameOver).toBeFalsy()
   expect(result.current.paused).toBeFalsy()
 })
@@ -725,7 +725,7 @@ test('rotate i off-center', async () => {
     width,
     height,
     score: 0,
-    rows: 100,
+    rows: 90,
   })
 
   const tiles = [
@@ -808,7 +808,7 @@ test('rotate t', () => {
     width,
     height,
     score: 0,
-    rows: 100,
+    rows: 90,
   })
 
   const tiles = [
@@ -892,7 +892,7 @@ test('t-spin single', async () => {
     width,
     height,
     score: 0,
-    rows: 100,
+    rows: 90,
   })
 
   const tiles = [
@@ -940,7 +940,7 @@ test('t-spin single', async () => {
 
 test('t-spin double off-center', async () => {
   const width = 10
-  const height = 5
+  const height = 9
 
   const initSpy = vi.spyOn(helperMod, 'initState')
   initSpy.mockReturnValue({
@@ -994,16 +994,64 @@ test('t-spin double off-center', async () => {
         TetrisBlock.I,
         TetrisBlock.I,
       ],
+      [
+        TetrisBlock.I,
+        TetrisBlock.I,
+        null,
+        TetrisBlock.I,
+        TetrisBlock.I,
+        TetrisBlock.I,
+        TetrisBlock.I,
+        TetrisBlock.I,
+        TetrisBlock.I,
+        TetrisBlock.I,
+      ],
+      [
+        TetrisBlock.I,
+        TetrisBlock.I,
+        null,
+        TetrisBlock.I,
+        TetrisBlock.I,
+        TetrisBlock.I,
+        TetrisBlock.I,
+        TetrisBlock.I,
+        TetrisBlock.I,
+        TetrisBlock.I,
+      ],
+      [
+        TetrisBlock.I,
+        TetrisBlock.I,
+        null,
+        TetrisBlock.I,
+        TetrisBlock.I,
+        TetrisBlock.I,
+        TetrisBlock.I,
+        TetrisBlock.I,
+        TetrisBlock.I,
+        TetrisBlock.I,
+      ],
+      [
+        TetrisBlock.I,
+        TetrisBlock.I,
+        null,
+        TetrisBlock.I,
+        TetrisBlock.I,
+        TetrisBlock.I,
+        TetrisBlock.I,
+        TetrisBlock.I,
+        TetrisBlock.I,
+        TetrisBlock.I,
+      ],
     ],
     rotation: Direction.UP,
     block: TetrisBlock.T,
     x: 2,
     y: 1,
-    next: helperMod.randomBag(),
+    next: [TetrisBlock.I, ...helperMod.randomBag()],
     width,
     height,
     score: 0,
-    rows: 107,
+    rows: 91,
   })
 
   const tiles = [
@@ -1034,6 +1082,54 @@ test('t-spin double off-center', async () => {
       TetrisBlock.I,
       TetrisBlock.I,
     ],
+    [
+      TetrisBlock.I,
+      TetrisBlock.I,
+      null,
+      TetrisBlock.I,
+      TetrisBlock.I,
+      TetrisBlock.I,
+      TetrisBlock.I,
+      TetrisBlock.I,
+      TetrisBlock.I,
+      TetrisBlock.I,
+    ],
+    [
+      TetrisBlock.I,
+      TetrisBlock.I,
+      null,
+      TetrisBlock.I,
+      TetrisBlock.I,
+      TetrisBlock.I,
+      TetrisBlock.I,
+      TetrisBlock.I,
+      TetrisBlock.I,
+      TetrisBlock.I,
+    ],
+    [
+      TetrisBlock.I,
+      TetrisBlock.I,
+      null,
+      TetrisBlock.I,
+      TetrisBlock.I,
+      TetrisBlock.I,
+      TetrisBlock.I,
+      TetrisBlock.I,
+      TetrisBlock.I,
+      TetrisBlock.I,
+    ],
+    [
+      TetrisBlock.I,
+      TetrisBlock.I,
+      null,
+      TetrisBlock.I,
+      TetrisBlock.I,
+      TetrisBlock.I,
+      TetrisBlock.I,
+      TetrisBlock.I,
+      TetrisBlock.I,
+      TetrisBlock.I,
+    ],
   ]
 
   const { result } = renderHook(() => useTetris({ width, height }))
@@ -1041,14 +1137,36 @@ test('t-spin double off-center', async () => {
   act(() => result.current.rotate())
 
   await waitFor(() => {
-    expect(result.current.next.length).toEqual(6)
+    expect(result.current.next.length).toEqual(7)
   })
 
   expect(result.current.visibleTiles[2]).toStrictEqual(tiles[2])
   expect(result.current.visibleTiles[3]).toStrictEqual(tiles[3])
   expect(result.current.visibleTiles[4]).toStrictEqual(tiles[4])
+  expect(result.current.visibleTiles[5]).toStrictEqual(tiles[5])
+  expect(result.current.visibleTiles[6]).toStrictEqual(tiles[6])
+  expect(result.current.visibleTiles[7]).toStrictEqual(tiles[7])
+  expect(result.current.visibleTiles[8]).toStrictEqual(tiles[8])
   expect(result.current.score).toEqual(1200 * 10)
   expect(result.current.annoucement).toEqual('T-Spin Double')
+
+  act(() => result.current.left())
+  act(() => result.current.left())
+  act(() => result.current.left())
+  act(() => result.current.rotate())
+  await waitFor(() => {
+    expect(result.current.next.length).toEqual(6)
+  })
+
+  expect(result.current.visibleTiles[2]).toStrictEqual(tiles[0])
+  expect(result.current.visibleTiles[3]).toStrictEqual(tiles[0])
+  expect(result.current.visibleTiles[4]).toStrictEqual(tiles[0])
+  expect(result.current.visibleTiles[5]).toStrictEqual(tiles[0])
+  expect(result.current.visibleTiles[6]).toStrictEqual(tiles[2])
+  expect(result.current.visibleTiles[7]).toStrictEqual(tiles[3])
+  expect(result.current.visibleTiles[8]).toStrictEqual(tiles[4])
+  expect(result.current.score).toEqual(1200 * 10 + 800 * 10 * 1.5)
+  expect(result.current.annoucement).toEqual('Tetris')
 })
 
 test('mini t-spin single', async () => {
@@ -1093,7 +1211,7 @@ test('mini t-spin single', async () => {
     width,
     height,
     score: 0,
-    rows: 100,
+    rows: 98,
   })
 
   const tiles = [
@@ -1225,7 +1343,7 @@ test('soft down', async () => {
     width,
     height,
     score: 0,
-    rows: 99,
+    rows: 78,
   })
 
   const tiles = [
@@ -1381,7 +1499,7 @@ test('restart', () => {
   act(() => result.current.restart())
 
   expect(result.current.held).toBeUndefined()
-  expect(result.current.level).toEqual(0)
+  expect(result.current.level).toEqual(1)
   expect(result.current.score).toEqual(0)
   expect(result.current.visibleTiles).toStrictEqual(tiles)
 })

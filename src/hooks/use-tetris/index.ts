@@ -64,7 +64,7 @@ export default function useTetris(
   }, [gameState])
 
   const level = useMemo(
-    () => Math.floor(gameState.rows / rowsClearedPerLevel),
+    () => Math.floor(gameState.rows / rowsClearedPerLevel) + 1,
     [gameState],
   )
 
@@ -322,7 +322,8 @@ export default function useTetris(
   }, [annoucement])
 
   useEffect(() => {
-    let tickTime = (1000 * Math.pow(0.8, level)) / tickModifier
+    let tickTime =
+      (Math.pow(0.8 - (level - 1) * 0.007, level - 1) * 1000) / tickModifier
     if (softDown) {
       tickTime = tickTime / 5
     }

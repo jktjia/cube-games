@@ -93,21 +93,21 @@ export function useMergeInterfere({
           () =>
             notifiyTime >= getLastMoveTime()
               ? {
-                  message: 'Like this',
-                  desc: 'I moved it for you',
-                  variant: ToastVariant.INFO,
-                }
+                message: 'Like this',
+                desc: 'I moved it for you',
+                variant: ToastVariant.INFO,
+              }
               : getLastMove() == m.dir
                 ? {
-                    message: 'Just like that!',
-                    desc: 'See, I have great suggestions',
-                    variant: ToastVariant.SUCCESS,
-                  }
+                  message: 'Just like that!',
+                  desc: 'See, I have great suggestions',
+                  variant: ToastVariant.SUCCESS,
+                }
                 : {
-                    message: 'Stop that!',
-                    desc: "That's not what I suggested",
-                    variant: ToastVariant.ERROR,
-                  },
+                  message: 'Stop that!',
+                  desc: "That's not what I suggested",
+                  variant: ToastVariant.ERROR,
+                },
           [notifiyTime, getLastMoveTime, getLastMove],
         ),
       }

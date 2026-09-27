@@ -10,7 +10,7 @@ import {
   slideRight,
   slideUp,
 } from './helpers'
-import { useMergeInterfere } from './use-interfere'
+import { useMergeInterfere } from './interfere'
 import type { MergeSpace } from '@/types'
 import { Direction } from '@/types'
 import { decrypt, encrypt } from '@/utils'

@@ -249,13 +249,6 @@ export function currentValid(
   return valid
 }
 
-/**
- * Find the y coordinate of the ghost piece at the bottom where the current piece will land
- * @param tiles
- * @param current
- * @param x
- * @returns
- */
 export function ghostLocation(
   tiles: TetrisSpace[][],
   current: boolean[][],

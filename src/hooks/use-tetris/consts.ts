@@ -129,9 +129,9 @@ export const iOffsets = {
   ],
 }
 
-export const oOffsets = [
-  [{ x: 0, y: 0 }],
-  [{ x: 0, y: -1 }],
-  [{ x: -1, y: -1 }],
-  [{ x: -1, y: 0 }],
-]
+export const oOffsets = {
+  [Direction.UP]: [{ x: 0, y: 0 }],
+  [Direction.RIGHT]: [{ x: 0, y: -1 }],
+  [Direction.DOWN]: [{ x: -1, y: -1 }],
+  [Direction.LEFT]: [{ x: -1, y: 0 }],
+}
