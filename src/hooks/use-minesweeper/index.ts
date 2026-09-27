@@ -20,31 +20,30 @@ export default function useMinesweeper(
     mineCount: 99,
   },
 ) {
-  const [mines, setMines] = useState<number[][] | undefined>(() => {
+  const [gameState, setGameState] = useState<MinesweeperState>(() => {
     const localMines = localStorage.getItem('minesweeper')
-    const matchingSettings =
-      localMines &&
-      JSON.parse(decrypt(localMines))['width'] == width &&
-      JSON.parse(decrypt(localMines))['height'] == height &&
-      JSON.parse(decrypt(localMines))['mineCount'] == mineCount
-    return localMines && matchingSettings
-      ? JSON.parse(decrypt(localMines))['mines']
-      : undefined
+    if (localMines) {
+      const localState: MinesweeperState = JSON.parse(decrypt(localMines))
+      if (
+        localState.width == width &&
+        localState.height == height &&
+        localState.mineCount == mineCount
+      ) {
+        return localState
+      }
+    }
+    return {
+      tiles: initTiles(width, height),
+      width,
+      height,
+      mineCount,
+    }
   })
-  const [tiles, setTiles] = useState<MineTileState[][]>(() => {
-    const localMines = localStorage.getItem('minesweeper')
-    const matchingSettings =
-      localMines &&
-      JSON.parse(decrypt(localMines))['width'] == width &&
-      JSON.parse(decrypt(localMines))['height'] == height &&
-      JSON.parse(decrypt(localMines))['mineCount'] == mineCount
-    return localMines && matchingSettings
-      ? JSON.parse(decrypt(localMines))['tiles']
-      : initTiles(width, height)
-  })
-  const [turns, setTurns] = useState<number>(0)
+
+  const [_, setTurns] = useState<number>(0)
 
   useEffect(() => {
+    const { tiles, mines } = gameState
     const invalidTiles =
       tiles.length != height || tiles.some((r) => r.length != width)
     const invalidMines =
@@ -53,11 +52,8 @@ export default function useMinesweeper(
         mines.some((r) => r.length != width) ||
         mines.flatMap((m) => m).filter((t) => t == -1).length != mineCount)
     if (invalidTiles || invalidMines) {
-      setMines(undefined)
       const newTiles = initTiles(width, height)
-      setTiles(newTiles)
-      updateLocal({
-        mines: undefined,
+      setGameState({
         tiles: newTiles,
         width,
         height,
@@ -66,118 +62,159 @@ export default function useMinesweeper(
     }
   })
 
-  const updateLocal = (state: MinesweeperState) => {
-    const strState = encrypt(JSON.stringify(state))
+  useEffect(() => {
+    const strState = encrypt(JSON.stringify(gameState))
     localStorage.setItem('minesweeper', strState)
-  }
+  }, [gameState])
+
+  // const updateLocal = (state: MinesweeperState) => {
+  //   const strState = encrypt(JSON.stringify(state))
+  //   localStorage.setItem('minesweeper', strState)
+  // }
+
+  // const restart = useCallback(() => {
+  //   setMines(undefined)
+  //   const newTiles = initTiles(width, height)
+  //   setTiles(newTiles)
+  //   updateLocal({ mines: undefined, tiles: newTiles, width, height, mineCount })
+  // }, [width, height, mineCount, setMines, setTiles, updateLocal, turns])
 
   const restart = useCallback(() => {
-    setMines(undefined)
-    const newTiles = initTiles(width, height)
-    setTiles(newTiles)
-    updateLocal({ mines: undefined, tiles: newTiles, width, height, mineCount })
-  }, [width, height, mineCount, setMines, setTiles, updateLocal, turns])
+    setGameState({
+      tiles: initTiles(width, height),
+      width,
+      height,
+      mineCount,
+    })
+  }, [setGameState])
 
   const flag = useCallback(
     (x: number, y: number) => {
-      if (mines) {
-        const current = tiles[y][x]
+      if (gameState.mines) {
+        const dup = JSON.parse(JSON.stringify(gameState.tiles))
+        const current = dup[y][x]
         if (current == MineTileState.FLAG) {
-          tiles[y][x] = MineTileState.NOT_SEEN
+          dup[y][x] = MineTileState.NOT_SEEN
+          setGameState((s) => ({ ...s, tiles: dup }))
           setTurns((t) => t + 1)
         } else if (current == MineTileState.NOT_SEEN) {
-          tiles[y][x] = MineTileState.FLAG
+          dup[y][x] = MineTileState.FLAG
+          setGameState((s) => ({ ...s, tiles: dup }))
           setTurns((t) => t + 1)
         }
-        updateLocal({ mines: mines, tiles: tiles, width, height, mineCount })
+        // updateLocal({ mines: mines, tiles: tiles, width, height, mineCount })
       }
     },
-    [width, height, mineCount, mines, tiles, setTurns, updateLocal],
+    [gameState, setTurns],
   )
 
   const flagOrRevealNeighbors = useCallback(
     (x: number, y: number) => {
-      if (mines) {
-        const current = tiles[y][x]
+      if (gameState.mines) {
+        const current = gameState.tiles[y][x]
         if (current == MineTileState.SEEN) {
-          const newTiles = revealNeighbors(x, y, height, width, mines, tiles)
-          setTiles(newTiles)
-          setTurns((t) => t + 1)
-          updateLocal({
-            mines: mines,
-            tiles: newTiles,
-            width,
+          const newTiles = revealNeighbors(
+            x,
+            y,
             height,
-            mineCount,
-          })
+            width,
+            gameState.mines,
+            gameState.tiles,
+          )
+          setGameState((s) => ({ ...s, tiles: newTiles }))
+          setTurns((t) => t + 1)
         } else {
           flag(x, y)
         }
       }
     },
-    [width, height, mineCount, mines, tiles, setTurns, updateLocal, flag],
+    [gameState, setTurns, flag],
   )
 
   const reveal = useCallback(
     (x: number, y: number) => {
-      if (!mines) {
+      if (!gameState.mines) {
         const newMines = initMines(x, y, width, height, mineCount)
-        setMines(newMines)
-        const newTiles = revealTile(x, y, height, width, newMines, tiles)
-        setTiles(newTiles)
-        setTurns((t) => t + 1)
-        updateLocal({
-          mines: newMines,
-          tiles: newTiles,
-          width,
+        // setMines(newMines)
+        const newTiles = revealTile(
+          x,
+          y,
           height,
-          mineCount,
-        })
-      } else {
-        const newTiles = revealTile(x, y, height, width, mines, tiles)
-        setTiles(newTiles)
+          width,
+          newMines,
+          gameState.tiles,
+        )
+        setGameState((s) => ({ ...s, mines: newMines, tiles: newTiles }))
         setTurns((t) => t + 1)
-        updateLocal({ mines: mines, tiles: newTiles, width, height, mineCount })
+        // updateLocal({
+        //   mines: newMines,
+        //   tiles: newTiles,
+        //   width,
+        //   height,
+        //   mineCount,
+        // })
+      } else {
+        const newTiles = revealTile(
+          x,
+          y,
+          height,
+          width,
+          gameState.mines,
+          gameState.tiles,
+        )
+        setGameState((s) => ({ ...s, tiles: newTiles }))
+        // setTiles(newTiles)
+        setTurns((t) => t + 1)
+        // updateLocal({ mines: mines, tiles: newTiles, width, height, mineCount })
       }
     },
-    [height, width, mineCount, mines, tiles, setTiles, setTurns, updateLocal],
+    [gameState, setTurns],
   )
 
   const remaining = useMemo(() => {
     return (
       mineCount -
-      tiles.flatMap((t) => t).filter((t) => t == MineTileState.FLAG).length
+      gameState.tiles.flatMap((t) => t).filter((t) => t == MineTileState.FLAG)
+        .length
     )
-  }, [mineCount, tiles])
+  }, [gameState])
 
   const isGameLost = useMemo(() => {
+    const mines = gameState.mines
     return (
       mines &&
-      tiles.some((r, i) =>
+      gameState.tiles.some((r, i) =>
         r.some((t, idx) => t == MineTileState.SEEN && mines[i][idx] == -1),
       )
     )
-  }, [mines, tiles])
+  }, [gameState])
 
   const isGameWon = useMemo(() => {
     let gameWon = remaining == 0
     gameWon =
       gameWon &&
-      tiles.flatMap((t) => t).filter((t) => t == MineTileState.NOT_SEEN)
-        .length == 0
+      gameState.tiles
+        .flatMap((t) => t)
+        .filter((t) => t == MineTileState.NOT_SEEN).length == 0
     return gameWon
-  }, [remaining, tiles])
+  }, [remaining, gameState])
 
   const isGameOver = useMemo(
     () => isGameLost || isGameWon,
     [isGameLost, isGameWon],
   )
 
-  useMinesweeperInterfere({ reveal, tiles, mines, restart, isGameOver })
+  useMinesweeperInterfere({
+    reveal,
+    tiles: gameState.tiles,
+    mines: gameState.mines,
+    restart,
+    isGameOver,
+  })
 
   return {
-    mines,
-    tiles,
+    mines: gameState.mines,
+    tiles: gameState.tiles,
     flag,
     reveal,
     flagOrRevealNeighbors,

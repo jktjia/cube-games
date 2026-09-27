@@ -17,7 +17,6 @@ test('mine init', () => {
     useMinesweeper({ width, height, mineCount: count }),
   )
 
-  expect(localStorage.getItem('minesweeper')).toBeFalsy()
   expect(result.current.mines).toBeUndefined()
   act(() => result.current.reveal(4, 2))
 
@@ -358,6 +357,100 @@ test('unflag', () => {
     [2, 1, 1, 1, 1, 2, 2, 2],
     [1, 1, 1, 1, 1, 2, 2, 2],
     [1, 1, 1, 1, 1, 2, 2, 2],
+    [1, 1, 1, 1, 1, 1, 1, 1],
+    [2, 1, 1, 1, 1, 1, 1, 1],
+  ]
+
+  expect(result.current.tiles).toStrictEqual(expected)
+  expect(result.current.isGameLost).toBeFalsy()
+  expect(result.current.isGameWon).toBeFalsy()
+  expect(result.current.isGameOver).toBeFalsy()
+  const storage = localStorage.getItem('minesweeper')
+  expect(storage).toBeTruthy()
+  if (storage) {
+    expect(JSON.parse(decrypt(storage))['tiles']).toStrictEqual(expected)
+  }
+})
+
+test('reveal neighbors', () => {
+  const mineSpy = vi.spyOn(helperMod, 'initMines')
+  mineSpy.mockReturnValue([
+    [0, 1, -1, -1, 2, 2, -1, 2],
+    [0, 1, 4, -1, 5, 4, -1, 2],
+    [1, 1, 2, -1, -1, -1, 2, 1],
+    [-1, 1, 1, 2, 3, 2, 1, 0],
+    [1, 1, 0, 0, 1, 1, 2, 1],
+    [0, 0, 0, 0, 1, -1, 2, -1],
+    [1, 1, 0, 0, 1, 1, 2, 1],
+    [-1, 1, 0, 0, 0, 0, 0, 0],
+  ])
+
+  const width = 8
+  const height = 8
+  const count = 12
+  const { result } = renderHook(() =>
+    useMinesweeper({ width, height, mineCount: count }),
+  )
+
+  act(() => result.current.reveal(2, 4))
+  act(() => result.current.flag(5, 5))
+
+  act(() => result.current.flagOrRevealNeighbors(4, 4))
+
+  const expected: MineTileState[][] = [
+    [2, 2, 2, 2, 2, 2, 2, 2],
+    [2, 2, 2, 2, 2, 2, 2, 2],
+    [2, 2, 2, 2, 2, 2, 2, 2],
+    [2, 1, 1, 1, 1, 1, 2, 2],
+    [1, 1, 1, 1, 1, 1, 2, 2],
+    [1, 1, 1, 1, 1, 0, 2, 2],
+    [1, 1, 1, 1, 1, 1, 1, 1],
+    [2, 1, 1, 1, 1, 1, 1, 1],
+  ]
+
+  expect(result.current.tiles).toStrictEqual(expected)
+  expect(result.current.isGameLost).toBeFalsy()
+  expect(result.current.isGameWon).toBeFalsy()
+  expect(result.current.isGameOver).toBeFalsy()
+  const storage = localStorage.getItem('minesweeper')
+  expect(storage).toBeTruthy()
+  if (storage) {
+    expect(JSON.parse(decrypt(storage))['tiles']).toStrictEqual(expected)
+  }
+})
+
+test('reveal neighbors not possible', () => {
+  const mineSpy = vi.spyOn(helperMod, 'initMines')
+  mineSpy.mockReturnValue([
+    [0, 1, -1, -1, 2, 2, -1, 2],
+    [0, 1, 4, -1, 5, 4, -1, 2],
+    [1, 1, 2, -1, -1, -1, 2, 1],
+    [-1, 1, 1, 2, 3, 2, 1, 0],
+    [1, 1, 0, 0, 1, 1, 2, 1],
+    [0, 0, 0, 0, 1, -1, 2, -1],
+    [1, 1, 0, 0, 1, 1, 2, 1],
+    [-1, 1, 0, 0, 0, 0, 0, 0],
+  ])
+
+  const width = 8
+  const height = 8
+  const count = 12
+  const { result } = renderHook(() =>
+    useMinesweeper({ width, height, mineCount: count }),
+  )
+
+  act(() => result.current.reveal(2, 4))
+  act(() => result.current.flag(7, 5))
+
+  act(() => result.current.flagOrRevealNeighbors(4, 4))
+
+  const expected: MineTileState[][] = [
+    [2, 2, 2, 2, 2, 2, 2, 2],
+    [2, 2, 2, 2, 2, 2, 2, 2],
+    [2, 2, 2, 2, 2, 2, 2, 2],
+    [2, 1, 1, 1, 1, 2, 2, 2],
+    [1, 1, 1, 1, 1, 2, 2, 2],
+    [1, 1, 1, 1, 1, 2, 2, 0],
     [1, 1, 1, 1, 1, 1, 1, 1],
     [2, 1, 1, 1, 1, 1, 1, 1],
   ]
