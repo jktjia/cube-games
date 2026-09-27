@@ -1,5 +1,4 @@
 import { useCallback, useMemo, useState } from 'react'
-import { useInterfere } from '../use-interfere'
 import type { InterfereAction } from '@/types'
 import { MineTileState, ToastVariant } from '@/types'
 
@@ -24,7 +23,7 @@ const randomUnseenCoords = (tiles: MineTileState[][]) => {
   return { x: tiles[tiles.length - 1].length - 1, y: tiles.length - 1 }
 }
 
-export function useMinesweeperInterfere({
+export function getMineInterfereProps({
   reveal,
   mines,
   tiles,
@@ -114,5 +113,5 @@ export function useMinesweeperInterfere({
     },
   ]
 
-  useInterfere({ actions, setNotifyTime })
+  return { actions, setNotifyTime }
 }

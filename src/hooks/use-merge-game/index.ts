@@ -10,7 +10,7 @@ import {
   slideRight,
   slideUp,
 } from './helpers'
-import { useMergeInterfere } from './interfere'
+import { getMergeInterfereProps } from './interfere'
 import type { MergeSpace } from '@/types'
 import { Direction } from '@/types'
 import { decrypt, encrypt } from '@/utils'
@@ -138,7 +138,7 @@ export default function useMergeGame() {
     return lastMove
   }, [lastMoveTime])
 
-  useMergeInterfere({
+  const interfereProps = getMergeInterfereProps({
     up,
     down,
     left,
@@ -161,5 +161,6 @@ export default function useMergeGame() {
     isGameWon,
     restart,
     continueGame,
+    interfereProps,
   }
 }

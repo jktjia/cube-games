@@ -1,10 +1,9 @@
 import { useCallback, useMemo, useState } from 'react'
 import { timeoutModifier } from '../use-empty-context'
-import { useInterfere } from '../use-interfere'
 import type { Coord, InterfereAction } from '@/types'
 import { ToastVariant } from '@/types'
 
-export function useSnakeInterefere({
+export function getSnakeInterfereProps({
   isGameOver,
   restart,
   paused,
@@ -150,5 +149,5 @@ export function useSnakeInterefere({
     },
   ]
 
-  useInterfere({ actions, setNotifyTime })
+  return { actions, setNotifyTime }
 }

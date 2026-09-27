@@ -43,15 +43,22 @@ export function useEmptyProvider({
     const startDiff = now.valueOf() - startTime.valueOf()
     if (startDiff > 10 * 60 * 1000 * timeoutModifier) {
       setShowMessage(true)
+      setTitle('Empty Games')
 
-      setTimeout(() => setShowMessage(false), 2.5 * 1000 * timeoutModifier)
+      setTimeout(
+        () => {
+          setShowMessage(false)
+          setTitle('Cube Games')
+        },
+        2.5 * 1000 * timeoutModifier,
+      )
     }
     const timeout = setTimeout(
       () => setPokes((p) => p + 1),
       2 * 60 * 1000 * timeoutModifier,
     )
     return () => clearTimeout(timeout)
-  }, [setShowMessage, pokes])
+  }, [setShowMessage, setTitle, pokes])
 
   useEffect(() => {
     const startDiff = startTime.valueOf() - lastActivity.valueOf()

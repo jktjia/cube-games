@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { toast } from 'sonner'
 import { useLocation, useNavigate } from '@tanstack/react-router'
 import useEmptyContext, { timeoutModifier } from './use-empty-context'
-import type { InterfereAction } from '@/types'
+import type { InterfereAction, InterfereProps } from '@/types'
 import { ToastVariant } from '@/types'
 import { abandonedMessages } from '@/utils/messages'
 import { MINESWEEPER_PATH, SNAKE_PATH, TETRIS_PATH } from '@/utils/paths'
@@ -38,13 +38,7 @@ const variantToToast = {
   [ToastVariant.ERROR]: toast.error,
 }
 
-export function useInterfere({
-  actions,
-  setNotifyTime,
-}: {
-  actions: InterfereAction[]
-  setNotifyTime: React.Dispatch<React.SetStateAction<Date>>
-}) {
+export function useInterfere({ actions, setNotifyTime }: InterfereProps) {
   const [inferfereCount, setInterfereCount] = useState<number>(0)
   const [notifyNow, setNotifyNow] = useState<boolean>(false)
   const [interfereNow, setInterfereNow] = useState<boolean>(false)

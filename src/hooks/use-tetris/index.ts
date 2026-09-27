@@ -25,7 +25,7 @@ import {
   scoreRowsCleared,
   scoreTSpinRows,
 } from './consts'
-import { useTetrisInterfere } from './interfere'
+import { getTetrisInterfereProps } from './interfere'
 import type { TetrisState, WidthHeightSettings } from '@/types'
 import { Direction, TetrisBlock } from '@/types'
 import { decrypt, encrypt } from '@/utils'
@@ -346,7 +346,7 @@ export default function useTetris(
     return { ...state, tiles: shiftRight(state.tiles) }
   }
 
-  useTetrisInterfere({
+  const interfereProps = getTetrisInterfereProps({
     isGameOver,
     restart,
     hardDown: checkPossibleAndUpdate(hardDown),
@@ -377,5 +377,6 @@ export default function useTetris(
     paused,
     togglePause,
     annoucement,
+    interfereProps,
   }
 }

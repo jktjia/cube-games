@@ -7,6 +7,7 @@ import { cn } from '@/utils'
 import GameContent from '@/components/game-content'
 import useTetris from '@/hooks/use-tetris'
 import { blockMatrices } from '@/hooks/use-tetris/consts'
+import { useInterfere } from '@/hooks/use-interfere'
 
 const blockColors = {
   [TetrisBlock.T]: gradient[0],
@@ -106,7 +107,10 @@ export default function Tetris() {
     paused,
     togglePause,
     annoucement,
+    interfereProps,
   } = useTetris(defaultSettings)
+
+  useInterfere(interfereProps)
 
   const splitMessage = useMemo(
     () => (wheatMessage ? wheatMessage.toUpperCase().split('') : []),

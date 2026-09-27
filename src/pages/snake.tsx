@@ -6,6 +6,7 @@ import useEmptyContext from '@/hooks/use-empty-context'
 import { cn } from '@/utils'
 import GameContent from '@/components/game-content'
 import useSnake from '@/hooks/use-snake'
+import { useInterfere } from '@/hooks/use-interfere'
 
 const tileColors = {
   [SnakeTileState.APPLE]: gradient[13],
@@ -43,7 +44,10 @@ export default function Snake() {
     restart,
     paused,
     togglePause,
+    interfereProps,
   } = useSnake()
+
+  useInterfere(interfereProps)
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (!isGameOver) {

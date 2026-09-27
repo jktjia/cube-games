@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { initState, makeTiles, randomCoords, update } from './helpers'
-import { useSnakeInterefere } from './interfere'
+import { getSnakeInterfereProps } from './interfere'
 import type { Coord, WidthHeightSettings } from '@/types'
 import { Direction } from '@/types'
 import { decrypt, encrypt, moveDirs } from '@/utils'
@@ -149,7 +149,7 @@ export default function useSnake(
     return randomCoords(gameState.width, gameState.height, gameState.snake)
   }, [gameState])
 
-  useSnakeInterefere({
+  const interfereProps = getSnakeInterfereProps({
     isGameOver,
     restart,
     paused,
@@ -174,5 +174,6 @@ export default function useSnake(
     isGameOver,
     paused,
     togglePause,
+    interfereProps,
   }
 }

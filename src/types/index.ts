@@ -1,3 +1,4 @@
+import type { LucideIcon } from 'lucide-react'
 import type {
   Direction,
   SnakeTileState,
@@ -57,5 +58,16 @@ export interface Coord {
 }
 
 export type SnakeSpace = SnakeTileState | null
+
+export interface PageOption {
+  name: string
+  href: string
+  icon: LucideIcon
+}
+
+export interface InterfereProps {
+  actions: InterfereAction[]
+  setNotifyTime: React.Dispatch<React.SetStateAction<Date>>
+}
 
 export * from './enums'

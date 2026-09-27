@@ -1,10 +1,9 @@
 import { useCallback, useMemo, useState } from 'react'
 import { timeoutModifier } from '../use-empty-context'
-import { useInterfere } from '../use-interfere'
 import type { InterfereAction } from '@/types'
 import { ToastVariant } from '@/types'
 
-export function useTetrisInterfere({
+export function getTetrisInterfereProps({
   isGameOver,
   restart,
   hold,
@@ -150,5 +149,6 @@ export function useTetrisInterfere({
     },
   ]
 
-  useInterfere({ actions, setNotifyTime })
+  // useInterfere({ actions, setNotifyTime })
+  return { actions, setNotifyTime }
 }

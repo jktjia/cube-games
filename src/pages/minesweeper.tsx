@@ -9,6 +9,7 @@ import { Difficulty, MineTileState } from '@/types'
 import { cn } from '@/utils'
 import GameContent from '@/components/game-content'
 import { gradient } from '@/utils/colors'
+import { useInterfere } from '@/hooks/use-interfere'
 
 interface ColsSettings extends MinesweeperSettings {
   gridCols: string
@@ -56,7 +57,10 @@ export default function Minesweeper() {
     isGameOver,
     restart,
     remaining,
+    interfereProps,
   } = useMinesweeper(settings)
+
+  useInterfere(interfereProps)
 
   const handleClick = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,

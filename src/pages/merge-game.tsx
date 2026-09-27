@@ -5,6 +5,7 @@ import GameContent from '@/components/game-content'
 import { gradient } from '@/utils/colors'
 import { cn } from '@/utils'
 import { Button } from '@/components/ui/button'
+import { useInterfere } from '@/hooks/use-interfere'
 
 const controls = `Use arrow keys to move the tiles.
 When two tiles having the same number touch, they join into one.`
@@ -30,7 +31,10 @@ export default function MergeGame() {
     isGameWon,
     restart,
     continueGame,
+    interfereProps,
   } = useMergeGame()
+
+  useInterfere(interfereProps)
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'ArrowUp' || e.key === 'w') {

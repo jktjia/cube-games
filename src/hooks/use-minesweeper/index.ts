@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { initMines, initTiles, revealNeighbors, revealTile } from './helpers'
-import { useMinesweeperInterfere } from './interfere'
+import { getMineInterfereProps } from './interfere'
 import type { MinesweeperSettings } from '@/types'
 import { MineTileState } from '@/types'
 import { decrypt, encrypt } from '@/utils'
@@ -204,7 +204,7 @@ export default function useMinesweeper(
     [isGameLost, isGameWon],
   )
 
-  useMinesweeperInterfere({
+  const interfereProps = getMineInterfereProps({
     reveal,
     tiles: gameState.tiles,
     mines: gameState.mines,
@@ -223,5 +223,6 @@ export default function useMinesweeper(
     isGameLost,
     isGameWon,
     isGameOver,
+    interfereProps,
   }
 }
