@@ -83,7 +83,7 @@ export function useMinesweeperInterfere({
         }
         setCancelReveal(false)
         setRandomCoords(randomUnseenCoords(tiles))
-      }, [tiles, reveal, setCancelReveal, randomCoords]),
+      }, [cancelReveal, tiles, reveal, randomCoords]),
       afterToast: useMemo(
         () =>
           cancelReveal

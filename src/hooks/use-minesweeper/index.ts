@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { initMines, initTiles, revealNeighbors, revealTile } from './helpers'
-import { useMinesweeperInterfere } from './use-interfere'
+import { useMinesweeperInterfere } from './interfere'
 import type { MinesweeperSettings } from '@/types'
 import { MineTileState } from '@/types'
 import { decrypt, encrypt } from '@/utils'

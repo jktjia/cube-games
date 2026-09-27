@@ -126,9 +126,12 @@ export function useSnakeInterefere({
         },
       },
       action: useCallback(() => {
-        moveSnake(randomCoords)
+        if (!cancelMove) {
+          moveSnake(randomCoords)
+        }
+        setCancelMove(false)
         setRandomCoords(getRandomCoords())
-      }, [moveSnake, randomCoords, getRandomCoords]),
+      }, [cancelMove, moveSnake, randomCoords, getRandomCoords]),
       afterToast: useMemo(
         () =>
           cancelMove
