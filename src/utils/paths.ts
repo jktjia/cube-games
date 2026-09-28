@@ -1,3 +1,4 @@
+export const MERGE_PATH = '2048'
 export const MINESWEEPER_PATH = 'minesweeper'
 export const TETRIS_PATH = 'tetris'
 export const SNAKE_PATH = 'snake'

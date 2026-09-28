@@ -68,10 +68,11 @@ export default function Minesweeper() {
     y: number,
   ) => {
     if (!isGameOver) {
-      e.preventDefault()
       if (e.button === 0) {
+        e.preventDefault()
         reveal(x, y)
       } else if (e.button === 2) {
+        e.preventDefault()
         flag(x, y)
       }
     } else {
@@ -83,13 +84,14 @@ export default function Minesweeper() {
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (!isGameOver) {
-        e.preventDefault()
         if (e.key === ' ') {
+          e.preventDefault()
           if (hoverX != undefined && hoverY != undefined) {
             flagOrRevealNeighbors(hoverX, hoverY)
           }
           updateActivity()
         } else if (e.key === 'F2') {
+          e.preventDefault()
           restart()
           updateActivity()
         }

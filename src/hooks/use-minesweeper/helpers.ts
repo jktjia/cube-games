@@ -102,32 +102,28 @@ export function initMines(
     throw new Error('invalid initial click')
   }
 
-  let initInvalid = 9
-  const edgeY = initY == 0 || initY == height - 1
-  const edgeX = initX == 0 || initX == width - 1
-  if (edgeX && edgeY) {
-    initInvalid = 4
-  } else if (edgeX || edgeY) {
-    initInvalid = 6
+  const safeLocations: number[] = []
+  for (let i = initY == 0 ? 0 : -1; i <= (initY == height - 1 ? 0 : 1); i++) {
+    for (let j = initX == 0 ? 0 : -1; j <= (initX == width - 1 ? 0 : 1); j++) {
+      safeLocations.push((initY + i) * width + (initX + j))
+    }
   }
+
   const mineLocations: number[] = []
   for (let n = 0; n < count; n++) {
-    let loc = Math.floor(Math.random() * (width * height - initInvalid - n))
-    let locX = loc % width
-    let locY = Math.floor(loc / width)
-    while (
-      (locY <= initY + 1 &&
-        locY >= initY - 1 &&
-        locX <= initX + 1 &&
-        locX >= initX - 1) ||
-      mineLocations.includes(loc)
-    ) {
-      loc++
-      locX = loc % width
-      locY = Math.floor(loc / width)
+    let loc = Math.floor(
+      Math.random() * (width * height - safeLocations.length - n),
+    )
+    while ([...mineLocations, ...safeLocations].some((s) => s == loc)) {
+      if (loc == 0) {
+        loc = width * height - 1
+      } else {
+        loc--
+      }
     }
     mineLocations.push(loc)
   }
+  // console.log(mineLocations.sort((a, b) => b - a))
 
   const mines: number[][] = []
   for (let i = 0; i < height; i++) {

@@ -119,18 +119,25 @@ export default function Tetris() {
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'ArrowUp') {
+      e.preventDefault()
       rotate()
     } else if (e.key === ' ') {
+      e.preventDefault()
       hardDown()
     } else if (e.key === 'ArrowLeft') {
+      e.preventDefault()
       left()
     } else if (e.key === 'ArrowRight') {
+      e.preventDefault()
       right()
     } else if (e.key === 'c' || e.key === 'Shift') {
+      e.preventDefault()
       hold()
     } else if (e.key === 'ArrowDown') {
+      e.preventDefault()
       setSoftDown(true)
     } else if (e.key === 'Escape') {
+      e.preventDefault()
       togglePause()
     }
     updateActivity()
@@ -138,6 +145,7 @@ export default function Tetris() {
 
   const handleKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'ArrowDown') {
+      e.preventDefault()
       setSoftDown(false)
     }
   }

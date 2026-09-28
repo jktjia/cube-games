@@ -1,4 +1,3 @@
-import { Title } from 'react-head'
 import { CardContent, CardHeader } from '../components/ui/card'
 import { Button } from '../components/ui/button'
 import {
@@ -13,7 +12,6 @@ import { RadioGroup, RadioGroupItem } from './ui/radio-group'
 import { Label } from './ui/label'
 import type { ReactNode } from 'react'
 import { Difficulty } from '@/types'
-import useEmptyContext from '@/hooks/use-empty-context'
 
 export default function GameContent({
   gameName,
@@ -40,10 +38,8 @@ export default function GameContent({
   resetFocus?: () => void
   children?: ReactNode
 }) {
-  const { title } = useEmptyContext()
   return (
     <>
-      <Title>{title}</Title>
       <CardHeader className="text-lg font-semibold flex flex-row gap-1">
         <Button
           variant="secondary"

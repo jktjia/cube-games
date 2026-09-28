@@ -19,6 +19,7 @@ import Minesweeper from './pages/minesweeper.tsx'
 import TextLayout from './layouts/secret-layout.tsx'
 import {
   DONT_LEAVE_PATH,
+  MERGE_PATH,
   // FEED_ME_PATH,
   MINESWEEPER_PATH,
   SETTINGS_PATH,
@@ -30,6 +31,7 @@ import Tetris from './pages/tetris.tsx'
 import MainLayout from './layouts/main-layout.tsx'
 import Settings from './pages/settings.tsx'
 import Snake from './pages/snake.tsx'
+import Home from './pages/home.tsx'
 
 const rootRoute = createRootRoute({
   component: BaseLayout,
@@ -54,8 +56,14 @@ const textRoute = createRoute({
 })
 
 const indexRoute = createRoute({
-  getParentRoute: () => gameRoute,
+  getParentRoute: () => mainRoute,
   path: '/',
+  component: Home,
+})
+
+const mergeRoute = createRoute({
+  getParentRoute: () => gameRoute,
+  path: MERGE_PATH,
   component: MergeGame,
 })
 
@@ -98,7 +106,8 @@ const stayRoute = createRoute({
 const routeTree = rootRoute.addChildren([
   mainRoute.addChildren([
     settingsRoute,
-    gameRoute.addChildren([indexRoute, mineRoute, tetrisRoute, snakeRoute]),
+    indexRoute,
+    gameRoute.addChildren([mergeRoute, mineRoute, tetrisRoute, snakeRoute]),
   ]),
   // textRoute.addChildren([feedRoute, stayRoute]),
   textRoute.addChildren([stayRoute]),

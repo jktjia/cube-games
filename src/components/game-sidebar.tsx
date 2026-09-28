@@ -1,7 +1,6 @@
 import { Link } from '@tanstack/react-router'
-import { Blocks, Bomb, Grid2X2, LineSquiggle, Settings } from 'lucide-react'
-import { GameSidebarTrigger } from './game-sidebar-trigger'
-import type { LucideIcon } from 'lucide-react'
+import { Box } from 'lucide-react'
+import type { PageOption } from '@/types'
 import {
   Sidebar,
   SidebarContent,
@@ -11,49 +10,49 @@ import {
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
+  SidebarTrigger,
   useSidebar,
 } from '@/components/ui/sidebar'
-import {
-  MINESWEEPER_PATH,
-  SETTINGS_PATH,
-  SNAKE_PATH,
-  TETRIS_PATH,
-} from '@/utils/paths'
+import { cn, footerLinks, gameOptions } from '@/utils'
+import useEmptyContext from '@/hooks/use-empty-context'
 
-interface PageOption {
-  name: string
-  href: string
-  icon: LucideIcon
-}
-
-const gameOptions: PageOption[] = [
-  { name: '2048', href: '/', icon: Grid2X2 },
-  { name: 'Minesweeper', href: '/' + MINESWEEPER_PATH, icon: Bomb },
-  { name: 'Snake', href: '/' + SNAKE_PATH, icon: LineSquiggle },
-  { name: 'Tetris', href: '/' + TETRIS_PATH, icon: Blocks },
-]
-
-const footerLinks: PageOption[] = [
-  { name: 'Settings', href: '/' + SETTINGS_PATH, icon: Settings },
-]
-
-function PageLink({ page }: { page: PageOption }) {
+function PageLink({
+  page,
+  size,
+  className,
+}: {
+  page: PageOption
+  size?: 'default' | 'sm' | 'lg' | null
+  className?: string
+}) {
   const { toggleSidebar } = useSidebar()
   return (
-    <SidebarMenuButton key={page.name} onClick={toggleSidebar}>
-      <Link to={page.href} className="flex flex-row gap-2 items-center w-full">
+    <Link to={page.href}>
+      <SidebarMenuButton
+        key={page.name}
+        onClick={toggleSidebar}
+        size={size}
+        className={cn('flex flex-row gap-2 items-center w-full', className)}
+      >
         <page.icon size={20} />
         {page.name}
-      </Link>
-    </SidebarMenuButton>
+      </SidebarMenuButton>
+    </Link>
   )
 }
 
 export function GameSidebar() {
+  const { title } = useEmptyContext()
+
   return (
     <Sidebar>
-      <SidebarHeader className="flex flex-row justify-start">
-        <GameSidebarTrigger />
+      <SidebarHeader className="flex flex-row items-center justify-start">
+        <PageLink
+          page={{ name: title, href: '/', icon: Box }}
+          className="px-4 h-9"
+        />
+        <div className="grow" />
+        <SidebarTrigger />
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>

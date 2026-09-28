@@ -52,14 +52,19 @@ export default function Snake() {
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (!isGameOver) {
       if (e.key === 'ArrowUp' || e.key === 'w') {
+        e.preventDefault()
         up()
       } else if (e.key === 'ArrowDown' || e.key === 's') {
+        e.preventDefault()
         down()
       } else if (e.key === 'ArrowLeft' || e.key === 'a') {
+        e.preventDefault()
         left()
       } else if (e.key === 'ArrowRight' || e.key === 'd') {
+        e.preventDefault()
         right()
       } else if (e.key === 'Escape') {
+        e.preventDefault()
         togglePause()
       }
     } else {
