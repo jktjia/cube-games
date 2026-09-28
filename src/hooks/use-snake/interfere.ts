@@ -84,7 +84,7 @@ export function getSnakeInterfereProps({
         [isGamePlaying, tickModifier],
       ),
       action: useCallback(() => {
-        setTickModifier(2.5)
+        setTickModifier(1.5)
 
         const timeout = setTimeout(
           () => {

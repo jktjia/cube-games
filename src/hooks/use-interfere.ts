@@ -1,14 +1,25 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import {
+  startTransition,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react'
 import { toast } from 'sonner'
 import { useLocation, useNavigate } from '@tanstack/react-router'
 import useEmptyContext, { timeoutModifier } from './use-empty-context'
 import type { InterfereAction, InterfereProps } from '@/types'
 import { ToastVariant } from '@/types'
 import { abandonedMessages } from '@/utils/messages'
-import { MINESWEEPER_PATH, SNAKE_PATH, TETRIS_PATH } from '@/utils/paths'
+import {
+  MERGE_PATH,
+  MINESWEEPER_PATH,
+  SNAKE_PATH,
+  TETRIS_PATH,
+} from '@/utils/paths'
 
 const gamePaths = [
-  '/',
+  '/' + MERGE_PATH,
   '/' + MINESWEEPER_PATH,
   '/' + TETRIS_PATH,
   '/' + SNAKE_PATH,
@@ -109,9 +120,11 @@ export function useInterfere({ actions, setNotifyTime }: InterfereProps) {
   useEffect(() => {
     if (interfereNow && interfereAllowed) {
       if (actIdx != undefined) {
-        if (allActions[actIdx].action && allActions[actIdx].actionPossible) {
-          allActions[actIdx].action()
-        }
+        startTransition(() => {
+          if (allActions[actIdx].action && allActions[actIdx].actionPossible) {
+            allActions[actIdx].action()
+          }
+        })
         const params = allActions[actIdx].afterToast
         variantToToast[params.variant](params.message, {
           description: params.desc,

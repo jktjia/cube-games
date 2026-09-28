@@ -60,7 +60,6 @@ test('init from local storage', () => {
       { x: 2, y: 2 },
     ],
     apple: { x: 8, y: 0 },
-    score: 1,
     dir: Direction.DOWN,
     isGameLost: false,
   }
@@ -165,7 +164,6 @@ test('init when local storage does not match', () => {
       { x: 2, y: 2 },
     ],
     apple: { x: 8, y: 0 },
-    score: 1,
     dir: Direction.DOWN,
     isGameLost: false,
   }
@@ -218,7 +216,6 @@ test('up from right', async () => {
       { x: 2, y: 4 },
     ],
     apple: { x: 8, y: 4 },
-    score: 0,
     dir: Direction.RIGHT,
     isGameLost: false,
   })
@@ -283,7 +280,6 @@ test('up from left', async () => {
       { x: 4, y: 4 },
     ],
     apple: { x: 8, y: 4 },
-    score: 0,
     dir: Direction.DOWN,
     isGameLost: false,
   })
@@ -348,7 +344,6 @@ test('up from down', async () => {
       { x: 2, y: 3 },
     ],
     apple: { x: 8, y: 4 },
-    score: 0,
     dir: Direction.DOWN,
     isGameLost: false,
   })
@@ -426,7 +421,6 @@ test('down from right', async () => {
       { x: 2, y: 4 },
     ],
     apple: { x: 8, y: 4 },
-    score: 0,
     dir: Direction.RIGHT,
     isGameLost: false,
   })
@@ -492,7 +486,6 @@ test('down from up', async () => {
       { x: 2, y: 5 },
     ],
     apple: { x: 8, y: 4 },
-    score: 0,
     dir: Direction.LEFT,
     isGameLost: false,
   })
@@ -557,7 +550,6 @@ test('left from up', async () => {
       { x: 3, y: 5 },
     ],
     apple: { x: 8, y: 4 },
-    score: 0,
     dir: Direction.UP,
     isGameLost: false,
   })
@@ -623,7 +615,6 @@ test('left from right', async () => {
       { x: 3, y: 5 },
     ],
     apple: { x: 8, y: 4 },
-    score: 0,
     dir: Direction.UP,
     isGameLost: false,
   })
@@ -688,7 +679,6 @@ test('right from up', async () => {
       { x: 3, y: 5 },
     ],
     apple: { x: 8, y: 4 },
-    score: 0,
     dir: Direction.UP,
     isGameLost: false,
   })
@@ -754,7 +744,6 @@ test('right from left', async () => {
       { x: 4, y: 5 },
     ],
     apple: { x: 8, y: 4 },
-    score: 0,
     dir: Direction.UP,
     isGameLost: false,
   })
@@ -833,7 +822,6 @@ test('eat apple', async () => {
       { x: 2, y: 4 },
     ],
     apple: { x: 5, y: 4 },
-    score: 0,
     dir: Direction.RIGHT,
     isGameLost: false,
   })
@@ -860,7 +848,6 @@ test('hit wall causes game end', async () => {
       { x: 0, y: 0 },
     ],
     apple: { x: 2, y: 2 },
-    score: 0,
     dir: Direction.RIGHT,
     isGameLost: false,
   })
@@ -891,7 +878,6 @@ test('hit self causes game end', async () => {
       { x: 2, y: 0 },
     ],
     apple: { x: 1, y: 2 },
-    score: 0,
     dir: Direction.UP,
     isGameLost: false,
   })
@@ -903,7 +889,7 @@ test('hit self causes game end', async () => {
   })
   expect(result.current.isGameLost).toBeTruthy()
   expect(result.current.isGameWon).toBeFalsy()
-  expect(result.current.score).toBe(0)
+  expect(result.current.score).toBe(2)
 })
 
 test('fill board causes game end', async () => {
@@ -925,7 +911,6 @@ test('fill board causes game end', async () => {
       { x: 2, y: 0 },
     ],
     apple: { x: 0, y: 2 },
-    score: 1,
     dir: Direction.LEFT,
     isGameLost: false,
   })
@@ -937,7 +922,7 @@ test('fill board causes game end', async () => {
   })
   expect(result.current.isGameLost).toBeFalsy()
   expect(result.current.isGameWon).toBeTruthy()
-  expect(result.current.score).toBe(2)
+  expect(result.current.score).toBe(6)
 })
 
 test('restart', () => {
@@ -955,7 +940,6 @@ test('restart', () => {
         { x: 2, y: 4 },
       ],
       apple: { x: 8, y: 4 },
-      score: 0,
       dir: Direction.RIGHT,
       isGameLost: false,
     })
@@ -972,7 +956,6 @@ test('restart', () => {
         { x: 2, y: 4 },
       ],
       apple: { x: 1, y: 7 },
-      score: 4,
       dir: Direction.RIGHT,
       isGameLost: false,
     })
@@ -1003,6 +986,8 @@ test('restart', () => {
   ]
 
   const { result } = renderHook(() => useSnake({ width, height }))
+
+  expect(result.current.score).toEqual(4)
 
   act(() => result.current.restart())
 

@@ -1,4 +1,4 @@
-import { startTransition, useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import {
   addNewTile,
   emptyTiles,
@@ -65,26 +65,26 @@ export default function useMergeGame() {
   const update = useCallback(
     (newTiles: MergeSpace[][], s: number, id: number) => {
       if (!isGameOver()) {
-        startTransition(() => {
-          setScore((old) => old + s)
-          setTiles((t) => {
-            const moveWorked = !sameTiles(t, newTiles)
-            setTurns((n) => (moveWorked ? n + 1 : n))
-            if (moveWorked) {
-              setLastMoveTime(new Date())
-            } else {
-              updateLocal({ tiles: t, score: score + s, continue: continueWin })
-              return t
-            }
-            const withNewTile = addNewTile(newTiles, id)
-            updateLocal({
-              tiles: withNewTile,
-              score: score + s,
-              continue: continueWin,
-            })
-            return withNewTile
+        // startTransition(() => {
+        setScore((old) => old + s)
+        setTiles((t) => {
+          const moveWorked = !sameTiles(t, newTiles)
+          setTurns((n) => (moveWorked ? n + 1 : n))
+          if (moveWorked) {
+            setLastMoveTime(new Date())
+          } else {
+            updateLocal({ tiles: t, score: score + s, continue: continueWin })
+            return t
+          }
+          const withNewTile = addNewTile(newTiles, id)
+          updateLocal({
+            tiles: withNewTile,
+            score: score + s,
+            continue: continueWin,
           })
+          return withNewTile
         })
+        // })
       }
     },
     [isGameOver, setScore, setTurns, setTiles, continueWin, setLastMoveTime],

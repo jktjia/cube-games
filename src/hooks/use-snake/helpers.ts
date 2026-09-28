@@ -9,7 +9,7 @@ export const initState = (width: number, height: number) => {
     height,
     snake: initSnake(width, height),
     apple: initApple(width, height),
-    score: 0,
+    // score: 0,
     dir: Direction.RIGHT,
     isGameLost: false,
   }
@@ -105,6 +105,6 @@ export function update(state: SnakeState): SnakeState {
     apple: ateApple
       ? randomCoords(state.width, state.height, [head, ...snakeBody])
       : state.apple,
-    score: ateApple ? state.score + 1 : state.score,
+    // score: ateApple ? state.score + 1 : state.score,
   }
 }

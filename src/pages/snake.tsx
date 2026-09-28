@@ -10,8 +10,8 @@ import { useInterfere } from '@/hooks/use-interfere'
 
 const tileColors = {
   [SnakeTileState.APPLE]: gradient[13],
-  [SnakeTileState.HEAD]: gradient[6],
-  [SnakeTileState.BODY]: gradient[5],
+  [SnakeTileState.HEAD]: gradient[4],
+  [SnakeTileState.BODY]: gradient[3],
 }
 
 const controls = `Use arrow keys to change directions 

@@ -10,7 +10,7 @@ export interface SnakeState {
   height: number
   snake: Coord[]
   apple: Coord
-  score: number
+  // score: number
   dir: Direction
   isGameLost: boolean
 }
@@ -99,6 +99,8 @@ export default function useSnake(
     [gameState],
   )
 
+  const score = useMemo(() => gameState.snake.length - 3, [gameState])
+
   const isGameWon = useMemo(
     () => gameState.snake.length == width * height,
     [gameState],
@@ -118,14 +120,15 @@ export default function useSnake(
   }, [updateNow, isGameOver, paused, setGameState, setTicker, setUpdateNow])
 
   useEffect(() => {
-    const tickTime = (1000 * 0.25) / tickModifier
+    const tickTime =
+      Math.max(167 - Math.floor(score / 5) * 8, 80) / tickModifier
 
     const timeout = setTimeout(() => {
       setUpdateNow(true)
     }, tickTime)
 
     return () => clearTimeout(timeout)
-  }, [ticker])
+  }, [score, ticker])
 
   const togglePause = useCallback(() => {
     setPaused((p) => !p)
@@ -167,7 +170,7 @@ export default function useSnake(
     down,
     left,
     right,
-    score: gameState.score,
+    score,
     tiles,
     isGameLost: gameState.isGameLost,
     isGameWon,
