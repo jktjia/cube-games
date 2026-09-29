@@ -5,14 +5,14 @@ import useEmptyContext from '@/hooks/use-empty-context'
 import { gameOptions } from '@/utils'
 
 export default function Home() {
-  const { title, wheatMessage } = useEmptyContext()
+  const { title, riceMessage } = useEmptyContext()
 
   return (
     <div className="w-2xl flex flex-col justify-center items-start gap-5 h-full p-2">
       <h1 className="text-5xl font-bold">{title}</h1>
       {/* <p>
-        {wheatMessage
-          ? wheatMessage
+        {riceMessage
+          ? riceMessage
           : 'Ever notice how many basic games are based on boards made up of squares?'}
       </p> */}
       <Separator />

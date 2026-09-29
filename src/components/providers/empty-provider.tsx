@@ -8,7 +8,7 @@ interface EmptyContextType {
   setTitle: (s: string) => void
   lastActivity: Date
   updateActivity: () => void
-  wheatMessage?: string
+  riceMessage?: string
   interfereAllowed: boolean
   setInterfereAllowed: (b: boolean) => void
 }

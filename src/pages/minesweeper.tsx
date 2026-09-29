@@ -42,7 +42,7 @@ Press space bar while hovering over a square to flag it or reveal its adjacent s
 Press F2 or click the restart button to start a new game`
 
 export default function Minesweeper() {
-  const { updateActivity, wheatMessage } = useEmptyContext()
+  const { updateActivity, riceMessage } = useEmptyContext()
   const [difficulty, setDifficulty] = useState<Difficulty>(Difficulty.EXPERT)
   const [hoverX, setHoverX] = useState<number>()
   const [hoverY, setHoverY] = useState<number>()
@@ -109,8 +109,8 @@ export default function Minesweeper() {
   }, [handleKeyDown])
 
   const splitMessage = useMemo(
-    () => (wheatMessage ? wheatMessage.toUpperCase().split('') : []),
-    [wheatMessage],
+    () => (riceMessage ? riceMessage.toUpperCase().split('') : []),
+    [riceMessage],
   )
 
   return (
@@ -145,7 +145,7 @@ export default function Minesweeper() {
               )
               if (isGameLost && mines && mines[i][idx] == -1) {
                 content = <Bomb className="text-accent" />
-              } else if (wheatMessage) {
+              } else if (riceMessage) {
                 content =
                   splitMessage[(i * r.length + idx) % splitMessage.length]
               }
@@ -169,7 +169,7 @@ export default function Minesweeper() {
               )
               if (mines[i][idx] > 0) {
                 content = mines[i][idx]
-              } else if (wheatMessage) {
+              } else if (riceMessage) {
                 content = splitMessage[(i * r.length + t) % splitMessage.length]
               }
             }

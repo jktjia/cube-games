@@ -31,7 +31,7 @@ const tileBaseCN = cn(
 const tileEmptyCN = 'bg-muted-foreground opacity-25 shadow-lg'
 
 export default function Snake() {
-  const { updateActivity, wheatMessage } = useEmptyContext()
+  const { updateActivity, riceMessage } = useEmptyContext()
   const {
     tiles,
     score,
@@ -74,8 +74,8 @@ export default function Snake() {
   }
 
   const splitMessage = useMemo(
-    () => (wheatMessage ? wheatMessage.toUpperCase().split('') : []),
-    [wheatMessage],
+    () => (riceMessage ? riceMessage.toUpperCase().split('') : []),
+    [riceMessage],
   )
 
   const gridRef = useRef<HTMLDivElement>(null)
@@ -117,7 +117,7 @@ export default function Snake() {
             } else {
               className = cn(className, tileEmptyCN)
             }
-            if (wheatMessage) {
+            if (riceMessage) {
               content = splitMessage[(i * r.length + idx) % splitMessage.length]
             }
             return (

@@ -88,7 +88,7 @@ function BlockMatrix({
 }
 
 export default function Tetris() {
-  const { updateActivity, wheatMessage } = useEmptyContext()
+  const { updateActivity, riceMessage } = useEmptyContext()
   const {
     visibleTiles,
     held,
@@ -113,8 +113,8 @@ export default function Tetris() {
   useInterfere(interfereProps)
 
   const splitMessage = useMemo(
-    () => (wheatMessage ? wheatMessage.toUpperCase().split('') : []),
-    [wheatMessage],
+    () => (riceMessage ? riceMessage.toUpperCase().split('') : []),
+    [riceMessage],
   )
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -206,7 +206,7 @@ export default function Tetris() {
               } else {
                 className = cn(className, blockEmptyCN)
               }
-              if (wheatMessage) {
+              if (riceMessage) {
                 content =
                   splitMessage[(i * r.length + idx) % splitMessage.length]
               }

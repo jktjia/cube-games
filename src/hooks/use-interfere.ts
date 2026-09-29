@@ -181,7 +181,7 @@ export function useInterfere({ actions, setNotifyTime }: InterfereProps) {
           setNotifyNow(true)
         },
         // 60 * 1000 * timeoutModifier * Math.ceil(Math.random() * 5),
-        10 * 1000 * timeoutModifier * Math.ceil(Math.random() * 5),
+        30 * 1000 * timeoutModifier * Math.ceil(Math.random() * 5),
       )
 
       return () => clearTimeout(timeout)

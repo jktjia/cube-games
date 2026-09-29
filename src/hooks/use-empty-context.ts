@@ -67,7 +67,7 @@ export function useEmptyProvider({
     }
   }, [])
 
-  const wheatMessage = useMemo(
+  const riceMessage = useMemo(
     () =>
       showMessage
         ? boredMessages[Math.floor(Math.random() * boredMessages.length)]
@@ -88,7 +88,7 @@ export function useEmptyProvider({
               description: "Thought you'd seen the last of me, didn't you?",
             })
           },
-          60 * 1000 * timeoutModifier * (5 + Math.ceil(Math.random() * 5)),
+          60 * 1000 * timeoutModifier * (10 + Math.ceil(Math.random() * 5)),
         )
       }
     },
@@ -100,7 +100,7 @@ export function useEmptyProvider({
     setTitle,
     lastActivity,
     updateActivity,
-    wheatMessage,
+    riceMessage,
     interfereAllowed,
     setInterfereAllowed: toggleInterference,
     // setInterfereAllowed: setInterfereAllowed,
