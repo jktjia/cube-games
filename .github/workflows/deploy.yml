@@ -19,7 +19,7 @@ jobs:
       - name: Build project
         run: bun run build
         env:
-          name: github-pages
+          VITE_ENCODE_KEY: ${{ secrets.VITE_ENCODE_KEY }}
       - name: Upload static files as artifact
         id: deployment
         uses: actions/upload-pages-artifact@v3
