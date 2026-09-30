@@ -1,0 +1,133 @@
+import { useCallback, useEffect, useMemo, useRef } from 'react'
+import type { ReactNode } from 'react'
+import { gradient } from '@/utils/colors'
+import { SnakeTileState } from '@/types'
+import useEmptyContext from '@/hooks/use-empty-context'
+import { cn } from '@/utils'
+import GameContent from '@/components/game-content'
+import useSnake from '@/hooks/use-snake'
+import { useInterfere } from '@/hooks/use-interfere'
+
+const tileColors = {
+  [SnakeTileState.APPLE]: gradient[13],
+  [SnakeTileState.HEAD]: gradient[4],
+  [SnakeTileState.BODY]: gradient[3],
+}
+
+const controls = `Use arrow keys to change directions 
+Eat apples to grow longer
+Do not hit the walls or part of the snake`
+
+const defaultSettings = {
+  width: 20,
+  height: 15,
+}
+
+const tileBaseCN = cn(
+  'flex items-center justify-center aspect-square p-0 m-0',
+  'max-w-full w-8 text-black text-sm ',
+)
+
+const tileEmptyCN = 'bg-muted-foreground opacity-25 shadow-lg'
+
+export default function Snake() {
+  const { updateActivity, riceMessage } = useEmptyContext()
+  const {
+    tiles,
+    score,
+    up,
+    down,
+    left,
+    right,
+    isGameOver,
+    isGameLost,
+    restart,
+    paused,
+    togglePause,
+    interfereProps,
+  } = useSnake()
+
+  useInterfere(interfereProps)
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (!isGameOver) {
+      if (e.key === 'ArrowUp' || e.key === 'w') {
+        e.preventDefault()
+        up()
+      } else if (e.key === 'ArrowDown' || e.key === 's') {
+        e.preventDefault()
+        down()
+      } else if (e.key === 'ArrowLeft' || e.key === 'a') {
+        e.preventDefault()
+        left()
+      } else if (e.key === 'ArrowRight' || e.key === 'd') {
+        e.preventDefault()
+        right()
+      } else if (e.key === 'Escape') {
+        e.preventDefault()
+        togglePause()
+      }
+    } else {
+      restart()
+    }
+    updateActivity()
+  }
+
+  const splitMessage = useMemo(
+    () => (riceMessage ? riceMessage.toUpperCase().split('') : []),
+    [riceMessage],
+  )
+
+  const gridRef = useRef<HTMLDivElement>(null)
+  const focusGrid = useCallback(() => {
+    gridRef.current?.focus()
+  }, [])
+
+  useEffect(() => {
+    gridRef.current?.focus()
+  }, [])
+  return (
+    <GameContent
+      gameOverMessage={isGameLost ? 'You Lost!' : 'You Won!'}
+      isGameOver={isGameOver}
+      restart={restart}
+      // gameName="Minesweeper"
+      controls={controls}
+      scoreText={`Score: ${score}`}
+      resetFocus={focusGrid}
+      announcement={paused ? 'Paused' : undefined}
+    >
+      <div
+        className={cn(
+          'grid gap-1 transition-all max-h-full min-h-max',
+          'grid-cols-20',
+          'grid-rows-' + defaultSettings.height,
+        )}
+        onKeyDown={handleKeyDown}
+        tabIndex={0}
+        ref={gridRef}
+        autoFocus
+      >
+        {tiles.flatMap((r, i) =>
+          r.map((t, idx) => {
+            let className = tileBaseCN
+            let content: ReactNode = <></>
+            if (t != null && !paused) {
+              className = cn(className, tileColors[t])
+            } else {
+              className = cn(className, tileEmptyCN)
+            }
+            if (riceMessage) {
+              content = splitMessage[(i * r.length + idx) % splitMessage.length]
+            }
+            return (
+              <div className={className} key={'tile-' + i + '-' + idx}>
+                {content}
+              </div>
+            )
+          }),
+        )}
+      </div>
+    </GameContent>
+  )
+}

@@ -1,0 +1,189 @@
+import {
+  startTransition,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react'
+import { toast } from 'sonner'
+import { useLocation, useNavigate } from '@tanstack/react-router'
+import useEmptyContext, { timeoutModifier } from './use-empty-context'
+import type { InterfereAction, InterfereProps } from '@/types'
+import { ToastVariant } from '@/types'
+import { abandonedMessages } from '@/utils/messages'
+import {
+  MERGE_PATH,
+  MINESWEEPER_PATH,
+  SNAKE_PATH,
+  TETRIS_PATH,
+} from '@/utils/paths'
+
+const gamePaths = [
+  '/' + MERGE_PATH,
+  '/' + MINESWEEPER_PATH,
+  '/' + TETRIS_PATH,
+  '/' + SNAKE_PATH,
+]
+
+function randomNextAction(actions: InterfereAction[]) {
+  const nDoable = actions.filter((a) => a.actionPossible).length
+  if (nDoable == 0) {
+    return undefined
+  }
+  let n = Math.floor(Math.random() * nDoable)
+  let idx = 0
+  while (n > 0 || !actions[idx].actionPossible) {
+    if (actions[idx].actionPossible) {
+      n--
+    }
+    idx++
+  }
+  return idx
+}
+
+const variantToToast = {
+  [ToastVariant.BASE]: toast.message,
+  [ToastVariant.SUCCESS]: toast.success,
+  [ToastVariant.INFO]: toast.info,
+  [ToastVariant.WARNING]: toast.warning,
+  [ToastVariant.ERROR]: toast.error,
+}
+
+export function useInterfere({ actions, setNotifyTime }: InterfereProps) {
+  const [inferfereCount, setInterfereCount] = useState<number>(0)
+  const [notifyNow, setNotifyNow] = useState<boolean>(false)
+  const [interfereNow, setInterfereNow] = useState<boolean>(false)
+  const [actIdx, setActIdx] = useState<number>()
+
+  const [abandonedIdx, setAbandonedIdx] = useState<number>(0)
+
+  const { interfereAllowed, lastActivity } = useEmptyContext()
+  const navigate = useNavigate()
+  const location = useLocation()
+
+  const [startTime, _] = useState<Date>(new Date())
+
+  const otherGamePaths = gamePaths.filter((p) => location.href != p)
+
+  const baseActions: InterfereAction[] = [
+    {
+      actionPossible:
+        new Date().getTime() - startTime.getTime() >
+        5 * 60 * 1000 * timeoutModifier,
+
+      action: () => {
+        const href =
+          otherGamePaths[Math.floor(Math.random() * otherGamePaths.length)]
+        navigate({
+          to: href,
+        })
+      },
+      afterToast: {
+        message: `Redirecting...`,
+        desc:
+          location.href == '/'
+            ? "Let's play something"
+            : "Let's play something different",
+        variant: ToastVariant.INFO,
+      },
+    },
+    {
+      actionPossible:
+        new Date().getTime() - lastActivity.getTime() >
+        5 * 60 * 1000 * timeoutModifier,
+
+      action: useCallback(
+        () =>
+          setAbandonedIdx((a) =>
+            a < abandonedMessages.length - 1 ? a + 1 : a,
+          ),
+        [setAbandonedIdx],
+      ),
+      afterToast: {
+        message: useMemo(
+          () =>
+            abandonedMessages[abandonedIdx].title
+              ? abandonedMessages[abandonedIdx].title
+              : `It's been ${Math.floor((new Date().getTime() - lastActivity.getTime()) / (1000 * 60))} minutes since you were last active`,
+          [abandonedIdx, lastActivity],
+        ),
+        desc: useMemo(
+          () => abandonedMessages[abandonedIdx].desc,
+          [abandonedIdx],
+        ),
+        variant: ToastVariant.BASE,
+      },
+    },
+  ]
+
+  const allActions = actions ? baseActions.concat(...actions) : baseActions
+  // const allActions = baseActions
+
+  useEffect(() => {
+    if (interfereNow && interfereAllowed) {
+      if (actIdx != undefined) {
+        startTransition(() => {
+          if (allActions[actIdx].action && allActions[actIdx].actionPossible) {
+            allActions[actIdx].action()
+          }
+        })
+        const params = allActions[actIdx].afterToast
+        variantToToast[params.variant](params.message, {
+          description: params.desc,
+          action: params.action,
+        })
+      }
+
+      setInterfereNow(false)
+      setInterfereCount(inferfereCount + 1)
+      // console.log('last activity:', lastActivity)
+      // console.log('start time:', startTime)
+    }
+  }, [interfereNow, interfereAllowed, actIdx, setInterfereCount, lastActivity])
+
+  useEffect(() => {
+    if (notifyNow && interfereAllowed) {
+      const idx = randomNextAction(allActions)
+      setActIdx(idx)
+
+      if (idx != undefined && allActions[idx].beforeToast) {
+        const params = allActions[idx].beforeToast
+        variantToToast[params.variant](params.message, {
+          description: params.desc,
+          action: params.action,
+        })
+      }
+      setNotifyTime(new Date())
+
+      setTimeout(
+        () => {
+          setInterfereNow(true)
+        },
+        25 * 100 * timeoutModifier,
+      )
+      setNotifyNow(false)
+    }
+  }, [
+    interfereAllowed,
+    setActIdx,
+    allActions,
+    notifyNow,
+    setInterfereCount,
+    setNotifyTime,
+    setInterfereNow,
+  ])
+
+  useEffect(() => {
+    if (interfereAllowed) {
+      const timeout = setTimeout(
+        () => {
+          setNotifyNow(true)
+        },
+        // 60 * 1000 * timeoutModifier * Math.ceil(Math.random() * 5),
+        30 * 1000 * timeoutModifier * Math.ceil(Math.random() * 5),
+      )
+
+      return () => clearTimeout(timeout)
+    }
+  }, [inferfereCount, interfereAllowed, setNotifyNow])
+}
