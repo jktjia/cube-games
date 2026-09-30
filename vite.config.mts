@@ -1,5 +1,5 @@
+/// <reference types="vitest/config" />
 import { resolve } from 'node:path'
-
 import { defineConfig } from 'vite'
 import viteReact from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
@@ -17,7 +17,7 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@': resolve(__dirname, './src'),
+      '@': resolve(import.meta.dirname, './src'),
     },
   },
   base: 'https://jktjia.github.io/empty-games',

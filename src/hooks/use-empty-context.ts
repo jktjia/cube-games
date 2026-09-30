@@ -21,8 +21,6 @@ export function useEmptyProvider({
   const [showMessage, setShowMessage] = useState<boolean>(false)
   const [pokes, setPokes] = useState<number>(0)
 
-  const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout>()
-
   const [interfereAllowed, setInterfereAllowed] = useState<boolean>(true)
   const [ignoreCount, setIgnoreCount] = useState<number>(0)
 
@@ -36,7 +34,7 @@ export function useEmptyProvider({
     const now = new Date()
     setLastActivity(now)
     updateLocal(now)
-  }, [setLastActivity, timeoutId, setTimeoutId])
+  }, [setLastActivity])
 
   useEffect(() => {
     const now = new Date()
