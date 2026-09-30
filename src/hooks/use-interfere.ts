@@ -67,12 +67,10 @@ export function useInterfere({ actions, setNotifyTime }: InterfereProps) {
 
   const baseActions: InterfereAction[] = [
     {
-      actionPossible: useMemo(
-        () =>
-          new Date().getTime() - startTime.getTime() >
-          5 * 60 * 1000 * timeoutModifier,
-        [startTime, lastActivity],
-      ),
+      actionPossible:
+        new Date().getTime() - startTime.getTime() >
+        5 * 60 * 1000 * timeoutModifier,
+
       action: () => {
         const href =
           otherGamePaths[Math.floor(Math.random() * otherGamePaths.length)]
@@ -90,12 +88,10 @@ export function useInterfere({ actions, setNotifyTime }: InterfereProps) {
       },
     },
     {
-      actionPossible: useMemo(
-        () =>
-          new Date().getTime() - lastActivity.getTime() >
-          5 * 60 * 1000 * timeoutModifier,
-        [lastActivity],
-      ),
+      actionPossible:
+        new Date().getTime() - lastActivity.getTime() >
+        5 * 60 * 1000 * timeoutModifier,
+
       action: useCallback(
         () =>
           setAbandonedIdx((a) =>

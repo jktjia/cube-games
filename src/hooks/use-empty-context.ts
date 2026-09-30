@@ -26,7 +26,7 @@ export function useEmptyProvider({
   const [interfereAllowed, setInterfereAllowed] = useState<boolean>(true)
   const [ignoreCount, setIgnoreCount] = useState<number>(0)
 
-  const startTime = new Date()
+  const [startTime, _] = useState<Date>(new Date())
 
   const updateLocal = (activity: Date) => {
     localStorage.setItem('last-activity', JSON.stringify(activity))
@@ -58,7 +58,7 @@ export function useEmptyProvider({
       2 * 60 * 1000 * timeoutModifier,
     )
     return () => clearTimeout(timeout)
-  }, [setShowMessage, setTitle, pokes])
+  }, [startTime, setShowMessage, setTitle, pokes])
 
   useEffect(() => {
     const startDiff = startTime.valueOf() - lastActivity.valueOf()
