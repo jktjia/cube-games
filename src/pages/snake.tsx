@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react'
-import type { ReactNode } from 'react'
 import { gradient } from '@/utils/colors'
 import { SnakeTileState } from '@/types'
 import useEmptyContext from '@/hooks/use-empty-context'
