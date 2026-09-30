@@ -61,11 +61,34 @@ export function useInterfere({ actions, setNotifyTime }: InterfereProps) {
   const navigate = useNavigate()
   const location = useLocation()
 
-  const startTime = new Date()
+  const [startTime, _] = useState<Date>(new Date())
 
   const otherGamePaths = gamePaths.filter((p) => location.href != p)
 
   const baseActions: InterfereAction[] = [
+    {
+      actionPossible: useMemo(
+        () =>
+          new Date().getTime() - startTime.getTime() >
+          5 * 60 * 1000 * timeoutModifier,
+        [startTime, lastActivity],
+      ),
+      action: () => {
+        const href =
+          otherGamePaths[Math.floor(Math.random() * otherGamePaths.length)]
+        navigate({
+          to: href,
+        })
+      },
+      afterToast: {
+        message: `Redirecting...`,
+        desc:
+          location.href == '/'
+            ? "Let's play something"
+            : "Let's play something different",
+        variant: ToastVariant.INFO,
+      },
+    },
     {
       actionPossible: useMemo(
         () =>
@@ -95,26 +118,9 @@ export function useInterfere({ actions, setNotifyTime }: InterfereProps) {
         variant: ToastVariant.BASE,
       },
     },
-    {
-      actionPossible: useMemo(
-        () =>
-          new Date().getTime() - startTime.getTime() >
-          5 * 60 * 1000 * timeoutModifier,
-        [lastActivity],
-      ),
-      action: () =>
-        navigate({
-          to: otherGamePaths[Math.floor(Math.random() * otherGamePaths.length)],
-        }),
-      afterToast: {
-        message: `Redirecting...`,
-        desc: "Let's play something different",
-        variant: ToastVariant.INFO,
-      },
-    },
   ]
 
-  const allActions = [...baseActions, ...actions]
+  const allActions = actions ? baseActions.concat(...actions) : baseActions
   // const allActions = baseActions
 
   useEffect(() => {
@@ -130,19 +136,18 @@ export function useInterfere({ actions, setNotifyTime }: InterfereProps) {
           description: params.desc,
           action: params.action,
         })
-        console.log('interfere:', new Date())
       }
 
       setInterfereNow(false)
       setInterfereCount(inferfereCount + 1)
-      console.log('last activity:', lastActivity)
+      // console.log('last activity:', lastActivity)
+      // console.log('start time:', startTime)
     }
   }, [interfereNow, interfereAllowed, actIdx, setInterfereCount, lastActivity])
 
   useEffect(() => {
     if (notifyNow && interfereAllowed) {
       const idx = randomNextAction(allActions)
-      // console.log('action:', idx)
       setActIdx(idx)
 
       if (idx != undefined && allActions[idx].beforeToast) {
@@ -174,8 +179,6 @@ export function useInterfere({ actions, setNotifyTime }: InterfereProps) {
 
   useEffect(() => {
     if (interfereAllowed) {
-      // console.log('interfere count:', inferfereCount)
-
       const timeout = setTimeout(
         () => {
           setNotifyNow(true)

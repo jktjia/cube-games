@@ -12,7 +12,7 @@ export const abandonedMessages: { title?: string; desc: string }[] = [
   { desc: 'Please come back' },
   { desc: 'We can do something more fun' },
   {
-    title: "'I'll do whatever you want",
+    title: "I'll do whatever you want",
     desc: 'I promise it will be a good time',
   },
   { title: "You don't have to come back", desc: "It's your life" },

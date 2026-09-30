@@ -3,9 +3,11 @@ import { Card } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import useEmptyContext from '@/hooks/use-empty-context'
 import { gameOptions } from '@/utils'
+import { useInterfere } from '@/hooks/use-interfere'
 
 export default function Home() {
-  const { title, riceMessage } = useEmptyContext()
+  const { title } = useEmptyContext()
+  useInterfere({ setNotifyTime: console.log })
 
   return (
     <div className="w-2xl flex flex-col justify-center items-start gap-5 h-full p-2">
@@ -18,7 +20,7 @@ export default function Home() {
       <Separator />
       <div className="grid grid-cols-2 gap-5 w-full">
         {gameOptions.map((g) => (
-          <Link to={g.href}>
+          <Link to={g.href} key={g.href}>
             <Card className="w-full flex flex-row p-5">
               <g.icon size={20} />
               {g.name}

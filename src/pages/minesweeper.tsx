@@ -183,11 +183,11 @@ export default function Minesweeper() {
                   setHoverX(undefined)
                   setHoverY(undefined)
                 }}
+                key={'tile-' + i + '-' + idx}
               >
                 <Button
                   className={className}
                   size={'sm'}
-                  key={'tile-' + i + '-' + idx}
                   onClick={(e) => handleClick(e, idx, i)}
                   onContextMenu={(e) => handleClick(e, idx, i)}
                   disabled={t == MineTileState.SEEN && !isGameOver}

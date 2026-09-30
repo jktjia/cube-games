@@ -66,7 +66,7 @@ export interface PageOption {
 }
 
 export interface InterfereProps {
-  actions: InterfereAction[]
+  actions?: InterfereAction[]
   setNotifyTime: React.Dispatch<React.SetStateAction<Date>>
 }
 

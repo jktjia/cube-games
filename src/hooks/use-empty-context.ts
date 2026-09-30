@@ -24,7 +24,7 @@ export function useEmptyProvider({
   const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout>()
 
   const [interfereAllowed, setInterfereAllowed] = useState<boolean>(true)
-  // const [ignoreCount, setIgnoreCount] = useState<number>(0)
+  const [ignoreCount, setIgnoreCount] = useState<number>(0)
 
   const startTime = new Date()
 
@@ -81,6 +81,7 @@ export function useEmptyProvider({
         setInterfereAllowed(true)
       } else {
         setInterfereAllowed(false)
+        setIgnoreCount((i) => i + 1)
         setTimeout(
           () => {
             setInterfereAllowed(true)
@@ -88,7 +89,10 @@ export function useEmptyProvider({
               description: "Thought you'd seen the last of me, didn't you?",
             })
           },
-          60 * 1000 * timeoutModifier * (10 + Math.ceil(Math.random() * 5)),
+          60 *
+            1000 *
+            timeoutModifier *
+            (10 - Math.min(ignoreCount, 10) + Math.ceil(Math.random() * 5)),
         )
       }
     },
