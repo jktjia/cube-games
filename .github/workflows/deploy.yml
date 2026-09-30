@@ -18,6 +18,8 @@ jobs:
         run: bun install
       - name: Build project
         run: bun run build
+        env:
+          name: github-pages
       - name: Upload static files as artifact
         id: deployment
         uses: actions/upload-pages-artifact@v3

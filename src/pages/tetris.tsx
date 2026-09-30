@@ -192,7 +192,7 @@ export default function Tetris() {
           {visibleTiles.flatMap((r, i) =>
             r.map((t, idx) => {
               let className = blockBaseCN
-              let content: ReactNode = <></>
+              let content = ''
               if (t != null && !paused) {
                 className = cn(className, blockColors[t])
               } else if (

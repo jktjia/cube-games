@@ -111,7 +111,7 @@ export default function Snake() {
         {tiles.flatMap((r, i) =>
           r.map((t, idx) => {
             let className = tileBaseCN
-            let content: ReactNode = <></>
+            let content = ''
             if (t != null && !paused) {
               className = cn(className, tileColors[t])
             } else {
