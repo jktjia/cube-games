@@ -141,7 +141,7 @@ export default function Minesweeper() {
             if (t == MineTileState.NOT_SEEN || !mines) {
               className = cn(
                 className,
-                'bg-muted-foreground opacity-50 shadow-lg',
+                'bg-muted-foreground opacity-35 shadow-lg',
               )
               if (isGameLost && mines && mines[i][idx] == -1) {
                 content = <Bomb className="text-accent" />
@@ -152,7 +152,7 @@ export default function Minesweeper() {
             } else if (t == MineTileState.FLAG) {
               className = cn(
                 className,
-                'bg-muted-foreground opacity-50 shadow-lg',
+                'bg-muted-foreground opacity-35 shadow-lg',
               )
               if (isGameLost && mines[i][idx] != -1) {
                 content = <X className="text-accent" />

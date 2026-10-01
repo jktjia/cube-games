@@ -35,7 +35,7 @@ const blockBaseCN = cn(
   'max-w-full w-8 text-black text-sm ',
 )
 
-const blockEmptyCN = 'bg-muted-foreground opacity-25 shadow-lg'
+const blockEmptyCN = 'bg-muted-foreground opacity-35 shadow-lg'
 
 function BlockMatrix({
   block,

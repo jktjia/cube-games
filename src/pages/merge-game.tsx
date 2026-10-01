@@ -18,10 +18,10 @@ When two tiles having the same number touch, they join into one.`
 
 const tileBaseCN = cn(
   'flex items-center justify-center aspect-square p-0 m-0',
-  'max-w-full text-black ',
+  'max-w-full text-black',
 )
 
-const tileEmptyCN = 'bg-muted-foreground opacity-25 shadow-lg'
+const tileEmptyCN = 'bg-muted-foreground opacity-35 shadow-lg'
 
 export default function MergeGame() {
   const { updateActivity } = useEmptyContext()

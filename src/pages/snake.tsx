@@ -27,7 +27,7 @@ const tileBaseCN = cn(
   'max-w-full w-8 text-black text-sm ',
 )
 
-const tileEmptyCN = 'bg-muted-foreground opacity-25 shadow-lg'
+const tileEmptyCN = 'bg-muted-foreground opacity-35 shadow-lg'
 
 export default function Snake() {
   const { updateActivity, riceMessage } = useEmptyContext()
