@@ -46,7 +46,10 @@ export default function useTetris(
   })
 
   const [softDown, setSoftDown] = useState<boolean>(false)
-  const [paused, setPaused] = useState<boolean>(false)
+  const [paused, setPaused] = useState<boolean>(() => {
+    const localTiles = sessionStorage.getItem('tetris-paused')
+    return localTiles ? JSON.parse(localTiles) : false
+  })
   const [updateNow, setUpdateNow] = useState<boolean>(false)
   const [ticker, setTicker] = useState<number>(0)
   const [tickModifier, setTickModifier] = useState<number>(1)
@@ -72,6 +75,11 @@ export default function useTetris(
     const strState = encrypt(JSON.stringify(gameState))
     localStorage.setItem('tetris', strState)
   }, [gameState])
+
+  useEffect(() => {
+    const strPaused = JSON.stringify(paused)
+    sessionStorage.setItem('tetris-paused', strPaused)
+  }, [paused])
 
   const restart = useCallback(() => {
     setGameState(initState(width, height))
