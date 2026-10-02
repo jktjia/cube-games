@@ -10,7 +10,6 @@ export interface SnakeState {
   height: number
   snake: Coord[]
   apple: Coord
-  // score: number
   dir: Direction
   isGameLost: boolean
 }
@@ -30,7 +29,10 @@ export default function useSnake(
     return initState(width, height)
   })
 
-  const [paused, setPaused] = useState<boolean>(false)
+  const [paused, setPaused] = useState<boolean>(() => {
+    const localTiles = sessionStorage.getItem('snake-paused')
+    return localTiles ? JSON.parse(localTiles) : false
+  })
   const [updateNow, setUpdateNow] = useState<boolean>(false)
   const [ticker, setTicker] = useState<number>(0)
   const [tickModifier, setTickModifier] = useState<number>(1)
@@ -39,6 +41,11 @@ export default function useSnake(
     const strState = encrypt(JSON.stringify(gameState))
     localStorage.setItem('snake', strState)
   }, [gameState])
+
+  useEffect(() => {
+    const strPaused = JSON.stringify(paused)
+    sessionStorage.setItem('snake-paused', strPaused)
+  }, [paused])
 
   const restart = useCallback(() => {
     setPaused(false)
@@ -176,6 +183,7 @@ export default function useSnake(
     isGameWon,
     isGameOver,
     paused,
+    setPaused,
     togglePause,
     interfereProps,
   }

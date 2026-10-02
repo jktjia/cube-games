@@ -1,4 +1,4 @@
-import { CardContent, CardHeader } from '../components/ui/card'
+import { Card, CardContent, CardHeader } from '../components/ui/card'
 import { Button } from '../components/ui/button'
 import {
   Dialog,
@@ -18,43 +18,51 @@ export default function GameContent({
   controls,
   scoreText,
   restart,
+  setPaused,
   isGameOver,
   difficulty,
   setDifficulty,
   gameOverMessage,
   announcement,
-  resetFocus,
   children,
 }: {
   gameName?: string
   controls?: string
   scoreText?: string
   restart: () => void
+  setPaused?: (b: boolean) => void
   isGameOver?: boolean
   difficulty?: Difficulty
   setDifficulty?: (d: Difficulty) => void
   gameOverMessage?: string
   announcement?: string
-  resetFocus?: () => void
   children?: ReactNode
 }) {
   return (
-    <>
-      <CardHeader className="text-lg font-semibold flex flex-row gap-1">
+    <Card className="bg-card/50 backdrop-blur-sm border-muted max-w-full max-h-full flex flex-col">
+      <CardHeader className="text-lg font-semibold flex flex-col sm:flex-row gap-1 w-full">
         <Button
           variant="secondary"
           onClick={() => {
             restart()
-            resetFocus && resetFocus()
           }}
           className="hover:cursor-pointer"
         >
           Restart
         </Button>
         {setDifficulty && difficulty != undefined && (
-          <Dialog>
+          <Dialog
+            onOpenChange={(open) => {
+              setPaused && setPaused(open)
+            }}
+          >
             <DialogTrigger asChild>
-              <Button variant="link">Difficulty</Button>
+              <Button
+                variant="link"
+                className="hover:cursor-pointer hidden sm:inline"
+              >
+                Difficulty
+              </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-md">
               <DialogHeader>
@@ -90,9 +98,18 @@ export default function GameContent({
           </Dialog>
         )}
         {controls && (
-          <Dialog>
+          <Dialog
+            onOpenChange={(open) => {
+              setPaused && setPaused(open)
+            }}
+          >
             <DialogTrigger asChild>
-              <Button variant="link">Controls</Button>
+              <Button
+                variant="link"
+                className="hover:cursor-pointer hidden sm:inline"
+              >
+                Controls
+              </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-md">
               <DialogHeader>
@@ -107,21 +124,19 @@ export default function GameContent({
         )}
         <div className="text-end grow">{scoreText}</div>
       </CardHeader>
-      <CardContent>
-        <div className="max-h-full min-h-fit max-w-full min-w-fit items-center flex justify-center text-3xl font-semibold">
-          {children}
-          {isGameOver && (
-            <div className="absolute w-fit bg-background/50 rounded p-2">
-              {gameOverMessage}
-            </div>
-          )}
-          {announcement && (
-            <div className="absolute w-fit bg-background/50 rounded p-2">
-              {announcement}
-            </div>
-          )}
-        </div>
+      <CardContent className="items-center flex justify-center text-3xl font-semibold grow object-fill">
+        {children}
+        {isGameOver && (
+          <div className="absolute w-max bg-background/70 rounded p-2">
+            {gameOverMessage}
+          </div>
+        )}
+        {announcement && (
+          <div className="absolute w-max bg-background/70 rounded p-2">
+            {announcement}
+          </div>
+        )}
       </CardContent>
-    </>
+    </Card>
   )
 }

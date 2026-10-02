@@ -1,4 +1,5 @@
 import { useTheme } from '@/components/providers/theme-provider'
+import { Button } from '@/components/ui/button'
 import {
   Field,
   FieldContent,
@@ -15,10 +16,12 @@ import {
 } from '@/components/ui/select'
 import { Separator } from '@/components/ui/separator'
 import { Switch } from '@/components/ui/switch'
+import { useCats } from '@/hooks/use-cats'
 import useEmptyContext from '@/hooks/use-empty-context'
 
 export default function Settings() {
   const { interfereAllowed, setInterfereAllowed } = useEmptyContext()
+  const { catsRemaining, reset } = useCats()
   const { theme, setTheme } = useTheme()
 
   return (
@@ -59,6 +62,19 @@ export default function Settings() {
           onCheckedChange={setInterfereAllowed}
         />
       </Field>
+      {catsRemaining == 0 && (
+        <Field orientation="horizontal">
+          <FieldContent>
+            <FieldLabel htmlFor="reset-cats">Reset Cats</FieldLabel>
+            <FieldDescription className="flex items-start">
+              Hide all found cats
+            </FieldDescription>
+          </FieldContent>
+          <Button id="reset-cats" variant="outline" onClick={reset}>
+            Reset
+          </Button>
+        </Field>
+      )}
     </div>
   )
 }

@@ -1,10 +1,4 @@
-import {
-  ViewTransition,
-  startTransition,
-  useCallback,
-  useEffect,
-  useRef,
-} from 'react'
+import { ViewTransition, startTransition, useEffect, useState } from 'react'
 import useMergeGame from '@/hooks/use-merge-game'
 import useEmptyContext from '@/hooks/use-empty-context'
 import GameContent from '@/components/game-content'
@@ -13,15 +7,15 @@ import { cn } from '@/utils'
 import { Button } from '@/components/ui/button'
 import { useInterfere } from '@/hooks/use-interfere'
 
-const controls = `Use arrow keys to move the tiles.
-When two tiles having the same number touch, they join into one.`
+const controls = `When two tiles having the same number touch, they join into one.
+Arrow keys / WASD: Tile shifting`
 
 const tileBaseCN = cn(
   'flex items-center justify-center aspect-square p-0 m-0',
-  'max-w-full text-black ',
+  'max-w-full text-black',
 )
 
-const tileEmptyCN = 'bg-muted-foreground opacity-25 shadow-lg'
+const tileEmptyCN = 'bg-input'
 
 export default function MergeGame() {
   const { updateActivity } = useEmptyContext()
@@ -39,36 +33,38 @@ export default function MergeGame() {
     continueGame,
     interfereProps,
   } = useMergeGame()
+  const [paused, setPaused] = useState<boolean>(false)
 
   useInterfere(interfereProps)
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    startTransition(() => {
-      if (e.key === 'ArrowUp' || e.key === 'w') {
-        e.preventDefault()
-        up()
-      } else if (e.key === 'ArrowDown' || e.key === 's') {
-        e.preventDefault()
-        down()
-      } else if (e.key === 'ArrowLeft' || e.key === 'a') {
-        e.preventDefault()
-        left()
-      } else if (e.key === 'ArrowRight' || e.key === 'd') {
-        e.preventDefault()
-        right()
-      }
-      updateActivity()
-    })
+  const handleKeyDown = (e: KeyboardEvent) => {
+    if (!paused) {
+      startTransition(() => {
+        if (e.key === 'ArrowUp' || e.key === 'w') {
+          e.preventDefault()
+          up()
+        } else if (e.key === 'ArrowDown' || e.key === 's') {
+          e.preventDefault()
+          down()
+        } else if (e.key === 'ArrowLeft' || e.key === 'a') {
+          e.preventDefault()
+          left()
+        } else if (e.key === 'ArrowRight' || e.key === 'd') {
+          e.preventDefault()
+          right()
+        }
+        updateActivity()
+      })
+    }
   }
 
-  const gridRef = useRef<HTMLDivElement>(null)
-  const focusGrid = useCallback(() => {
-    gridRef.current?.focus()
-  }, [])
-
   useEffect(() => {
-    gridRef.current?.focus()
-  }, [])
+    document.addEventListener('keydown', handleKeyDown)
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [handleKeyDown])
 
   return (
     <GameContent
@@ -76,19 +72,15 @@ export default function MergeGame() {
       isGameOver={isGameLost}
       restart={restart}
       scoreText={`Score: ${score}`}
-      resetFocus={focusGrid}
+      setPaused={setPaused}
       controls={controls}
     >
       <ViewTransition>
         <div
           className={cn(
-            'grid grid-cols-4 gap-2 transition-all text-xl w-full',
+            'grid grid-cols-4 gap-1 transition-all text-xl max-h-full max-w-full w-xl aspect-square',
             isGameOver() ? ' opacity-50' : '',
           )}
-          onKeyDown={handleKeyDown}
-          tabIndex={0}
-          ref={gridRef}
-          autoFocus
         >
           {tiles.flatMap((r, i) =>
             r.map((t, idx) =>
