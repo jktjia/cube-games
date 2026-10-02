@@ -172,7 +172,7 @@ export default function Tetris() {
       setPaused={setPaused}
       announcement={paused ? 'Paused' : annoucement}
     >
-      <div className="flex flex-row items-start gap-4 text-xl w-xl">
+      <div className="flex flex-row items-start gap-4 text-xl w-lg">
         <div className="flex flex-col gap-4 max-w-1/7">
           Hold
           <BlockMatrix block={held} keyPrefix="held" />
@@ -195,10 +195,7 @@ export default function Tetris() {
                 ghost.some(({ x, y }) => y == i && x == idx) &&
                 !paused
               ) {
-                className = cn(
-                  className,
-                  'bg-muted-foreground opacity-50 shadow-lg',
-                )
+                className = cn(className, 'bg-accent')
                 if (riceMessage) {
                   content =
                     splitMessage[(i * r.length + idx) % splitMessage.length]
