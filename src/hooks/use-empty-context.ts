@@ -88,9 +88,9 @@ export function useEmptyProvider({
             })
           },
           60 *
-            1000 *
-            timeoutModifier *
-            (10 - Math.min(ignoreCount, 10) + Math.ceil(Math.random() * 5)),
+          1000 *
+          timeoutModifier *
+          (10 - Math.min(ignoreCount, 10) + Math.ceil(Math.random() * 5)),
         )
       }
     },

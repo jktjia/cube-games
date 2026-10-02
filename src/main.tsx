@@ -9,10 +9,10 @@ import {
 
 import './styles.css'
 import { Toaster } from 'sonner'
+import { HeadProvider } from 'react-head'
 import reportWebVitals from './reportWebVitals.ts'
 
 import BaseLayout from './layouts/base-layout.tsx'
-import GameLayout from './layouts/game-layout.tsx'
 import MergeGame from './pages/merge-game.tsx'
 import Minesweeper from './pages/minesweeper.tsx'
 // import FeedMe from './pages/feed-me.tsx'
@@ -32,6 +32,7 @@ import MainLayout from './layouts/main-layout.tsx'
 import Settings from './pages/settings.tsx'
 import Snake from './pages/snake.tsx'
 import Home from './pages/home.tsx'
+import { ThemeProvider } from './components/providers/theme-provider.tsx'
 
 const rootRoute = createRootRoute({
   component: BaseLayout,
@@ -41,12 +42,6 @@ const mainRoute = createRoute({
   getParentRoute: () => rootRoute,
   id: 'main',
   component: MainLayout,
-})
-
-const gameRoute = createRoute({
-  getParentRoute: () => mainRoute,
-  id: 'game',
-  component: GameLayout,
 })
 
 const textRoute = createRoute({
@@ -138,8 +133,12 @@ if (rootElement && !rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement)
   root.render(
     <StrictMode>
-      <RouterProvider router={router} />
-      <Toaster position="top-right" richColors />
+      <HeadProvider>
+        <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
+          <RouterProvider router={router} />
+          <Toaster position="top-right" richColors />
+        </ThemeProvider>
+      </HeadProvider>
     </StrictMode>,
   )
 }
