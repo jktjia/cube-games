@@ -13,10 +13,9 @@ const tileColors = {
   [SnakeTileState.BODY]: gradient[3],
 }
 
-const controls = `Use arrow keys to change directions 
-Eat apples to grow longer
-Do not hit the walls or part of the snake
-Press Esc to pause/unpause`
+const controls = `Eat apples to grow longer, but do not hit the walls or part of the snake
+Arrow keys / WASD: Change direction
+Escape: Pause/unpause`
 
 // const defaultSettings = {
 //   width: 20,

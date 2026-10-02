@@ -35,10 +35,11 @@ const difficultySettings: Record<Difficulty, ColsSettings> = {
   },
 }
 
-const controls = `Left-click an empty square to reveal it.
-Right-click an empty square to flag it.
-Press space bar while hovering over a square to flag it or reveal its adjacent squares.
-Press F2 or click the restart button to start a new game`
+const controls = `Flag all of the mines and reveal all empty squares.
+Left-click: Reveal square
+Right-click: Flag/unflag
+Space bar: Flag hovered square or reveal its adjacent squares.
+F2: Start a new game`
 
 const tileBaseCN = cn(
   'rounded-none flex items-center justify-center overflow-visible',

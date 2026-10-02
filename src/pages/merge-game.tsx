@@ -7,8 +7,8 @@ import { cn } from '@/utils'
 import { Button } from '@/components/ui/button'
 import { useInterfere } from '@/hooks/use-interfere'
 
-const controls = `Use arrow keys to move the tiles.
-When two tiles having the same number touch, they join into one.`
+const controls = `When two tiles having the same number touch, they join into one.
+Arrow keys / WASD: Tile shifting`
 
 const tileBaseCN = cn(
   'flex items-center justify-center aspect-square p-0 m-0',

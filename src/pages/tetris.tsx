@@ -22,7 +22,8 @@ const controls = `Left and right arrow keys: Piece shifting
 Up arrow key: Rotating 90 degrees clockwise
 Down arrow key: Non-locking soft drop
 Space bar: Locking hard drop
-C key / Shift key: Hold piece`
+C key / Shift key: Hold piece
+Escape: Pause/unpause`
 // Z key / Left Control key: Rotating 90 degrees counterclockwise`
 
 const defaultSettings = {
