@@ -375,6 +375,7 @@ export default function useTetris(
     setSoftDown,
     restart,
     paused,
+    setPaused,
     togglePause,
     annoucement,
     interfereProps,

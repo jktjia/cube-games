@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef } from 'react'
+import { useEffect, useMemo } from 'react'
 import { gradient } from '@/utils/colors'
 import { TetrisBlock } from '@/types'
 import useEmptyContext from '@/hooks/use-empty-context'
@@ -31,11 +31,11 @@ const defaultSettings = {
 }
 
 const blockBaseCN = cn(
-  ' flex items-center justify-center aspect-square p-0 m-0',
-  'max-w-full w-8 text-black text-sm ',
+  'flex items-center justify-center aspect-square p-0 m-0',
+  'max-w-full text-primary text-sm',
 )
 
-const blockEmptyCN = 'bg-muted-foreground opacity-35 shadow-lg'
+const blockEmptyCN = 'bg-input'
 
 function BlockMatrix({
   block,
@@ -93,7 +93,7 @@ export default function Tetris() {
     held,
     next,
     ghost,
-    level,
+    // level,
     score,
     isGameOver,
     left,
@@ -104,6 +104,7 @@ export default function Tetris() {
     setSoftDown,
     restart,
     paused,
+    setPaused,
     togglePause,
     annoucement,
     interfereProps,
@@ -116,7 +117,7 @@ export default function Tetris() {
     [riceMessage],
   )
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = (e: KeyboardEvent) => {
     if (e.key === 'ArrowUp') {
       e.preventDefault()
       rotate()
@@ -142,21 +143,22 @@ export default function Tetris() {
     updateActivity()
   }
 
-  const handleKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyUp = (e: KeyboardEvent) => {
     if (e.key === 'ArrowDown') {
       e.preventDefault()
       setSoftDown(false)
     }
   }
 
-  const gridRef = useRef<HTMLDivElement>(null)
-  const focusGrid = useCallback(() => {
-    gridRef.current?.focus()
-  }, [])
-
   useEffect(() => {
-    gridRef.current?.focus()
-  }, [])
+    document.addEventListener('keydown', handleKeyDown)
+    document.addEventListener('keyup', handleKeyUp)
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown)
+      document.addEventListener('keyup', handleKeyUp)
+    }
+  }, [handleKeyDown])
 
   return (
     <GameContent
@@ -165,25 +167,19 @@ export default function Tetris() {
       restart={restart}
       // gameName="Minesweeper"
       controls={controls}
-      scoreText={`Level: ${level}   Score: ${score}`}
-      resetFocus={focusGrid}
+      scoreText={`Score: ${score.toLocaleString('en-US')}`}
+      setPaused={setPaused}
       announcement={paused ? 'Paused' : annoucement}
     >
-      <div
-        className="flex flex-row items-start gap-4 text-xl"
-        onKeyDown={handleKeyDown}
-        onKeyUp={handleKeyUp}
-        tabIndex={0}
-        ref={gridRef}
-        autoFocus
-      >
-        <div className="flex flex-col gap-4">
+      <div className="flex flex-row items-start gap-4 text-xl w-xl">
+        <div className="flex flex-col gap-4 max-w-1/7">
           Hold
           <BlockMatrix block={held} keyPrefix="held" />
         </div>
         <div
           className={cn(
-            'grid gap-1 transition-all max-h-full min-h-max',
+            'grid gap-1 transition-all grow',
+            // 'grid gap-1 transition-all block-fit',
             'grid-cols-10',
             'grid-rows-' + defaultSettings.height,
           )}
@@ -202,12 +198,16 @@ export default function Tetris() {
                   className,
                   'bg-muted-foreground opacity-50 shadow-lg',
                 )
+                if (riceMessage) {
+                  content =
+                    splitMessage[(i * r.length + idx) % splitMessage.length]
+                }
               } else {
                 className = cn(className, blockEmptyCN)
-              }
-              if (riceMessage) {
-                content =
-                  splitMessage[(i * r.length + idx) % splitMessage.length]
+                if (riceMessage) {
+                  content =
+                    splitMessage[(i * r.length + idx) % splitMessage.length]
+                }
               }
               return (
                 <div className={className} key={'tile-' + i + '-' + idx}>
@@ -217,7 +217,7 @@ export default function Tetris() {
             }),
           )}
         </div>
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4 max-w-1/7">
           Next
           <div>
             {next.slice(0, 3).map((n, idx) => (

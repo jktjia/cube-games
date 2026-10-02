@@ -62,25 +62,25 @@ const indexRoute = createRoute({
 })
 
 const mergeRoute = createRoute({
-  getParentRoute: () => gameRoute,
+  getParentRoute: () => mainRoute,
   path: MERGE_PATH,
   component: MergeGame,
 })
 
 const mineRoute = createRoute({
-  getParentRoute: () => gameRoute,
+  getParentRoute: () => mainRoute,
   path: MINESWEEPER_PATH,
   component: Minesweeper,
 })
 
 const tetrisRoute = createRoute({
-  getParentRoute: () => gameRoute,
+  getParentRoute: () => mainRoute,
   path: TETRIS_PATH,
   component: Tetris,
 })
 
 const snakeRoute = createRoute({
-  getParentRoute: () => gameRoute,
+  getParentRoute: () => mainRoute,
   path: SNAKE_PATH,
   component: Snake,
 })
@@ -107,7 +107,11 @@ const routeTree = rootRoute.addChildren([
   mainRoute.addChildren([
     settingsRoute,
     indexRoute,
-    gameRoute.addChildren([mergeRoute, mineRoute, tetrisRoute, snakeRoute]),
+    mergeRoute,
+    mineRoute,
+    tetrisRoute,
+    snakeRoute,
+    // gameRoute.addChildren([mergeRoute, mineRoute, tetrisRoute, snakeRoute]),
   ]),
   // textRoute.addChildren([feedRoute, stayRoute]),
   textRoute.addChildren([stayRoute]),

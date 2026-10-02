@@ -176,6 +176,7 @@ export default function useSnake(
     isGameWon,
     isGameOver,
     paused,
+    setPaused,
     togglePause,
     interfereProps,
   }

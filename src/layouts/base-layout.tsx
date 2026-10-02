@@ -12,7 +12,7 @@ export default function BaseLayout() {
       <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
         <EmptyProvider navigate={navigate}>
           <SidebarProvider defaultOpen={false}>
-            <div className="text-center w-full h-screen overflow-auto">
+            <div className="text-center max-w-screen w-screen max-h-screen h-screen">
               <Outlet />
             </div>
           </SidebarProvider>

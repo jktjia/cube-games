@@ -1,6 +1,5 @@
 import { Bomb, FlagTriangleRight, X } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { Button } from '../components/ui/button'
 import type { ReactNode } from 'react'
 import type { MinesweeperSettings } from '@/types'
 import useEmptyContext from '@/hooks/use-empty-context'
@@ -41,6 +40,13 @@ Right-click an empty square to flag it.
 Press space bar while hovering over a square to flag it or reveal its adjacent squares.
 Press F2 or click the restart button to start a new game`
 
+const tileBaseCN = cn(
+  'rounded-none flex items-center justify-center overflow-visible',
+  'max-w-full min-w-4 max-h-full min-h-4 aspect-square text-sm text-primary ',
+)
+
+const tileEmptyCN = 'bg-input'
+
 export default function Minesweeper() {
   const { updateActivity, riceMessage } = useEmptyContext()
   const [difficulty, setDifficulty] = useState<Difficulty>(Difficulty.EXPERT)
@@ -59,11 +65,12 @@ export default function Minesweeper() {
     remaining,
     interfereProps,
   } = useMinesweeper(settings)
+  const [paused, setPaused] = useState<boolean>(false)
 
   useInterfere(interfereProps)
 
   const handleClick = (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
     x: number,
     y: number,
   ) => {
@@ -83,7 +90,7 @@ export default function Minesweeper() {
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
-      if (!isGameOver) {
+      if (!isGameOver && !paused) {
         if (e.key === ' ') {
           e.preventDefault()
           if (hoverX != undefined && hoverY != undefined) {
@@ -123,41 +130,41 @@ export default function Minesweeper() {
       difficulty={difficulty}
       setDifficulty={setDifficulty}
       scoreText={`Mines Remaining: ${remaining}`}
+      setPaused={setPaused}
     >
       <div
         className={cn(
-          'grid gap-1 transition-all max-h-full min-w-fit',
+          'grid gap-1 transition-all w-5xl',
           difficultySettings[difficulty].gridCols,
           isGameOver ? 'opacity-50' : '',
         )}
       >
         {tiles.flatMap((r, i) =>
           r.map((t, idx) => {
-            let className = cn(
-              'rounded-none flex items-center justify-center aspect-square p-0 m-0 overflow-visible',
-              'max-w-full',
-            )
+            let className = tileBaseCN
             let content: ReactNode = <></>
             if (t == MineTileState.NOT_SEEN || !mines) {
-              className = cn(
-                className,
-                'bg-muted-foreground opacity-35 shadow-lg',
-              )
+              className = tileEmptyCN
+              if (!isGameLost) {
+                className = cn(className, 'hover:cursor-pointer')
+              }
               if (isGameLost && mines && mines[i][idx] == -1) {
-                content = <Bomb className="text-accent" />
+                content = <Bomb size={16} className="text-primary" />
               } else if (riceMessage) {
                 content =
                   splitMessage[(i * r.length + idx) % splitMessage.length]
               }
             } else if (t == MineTileState.FLAG) {
-              className = cn(
-                className,
-                'bg-muted-foreground opacity-35 shadow-lg',
-              )
+              className = tileEmptyCN
+              if (!isGameLost) {
+                className = cn(className, 'hover:cursor-pointer')
+              }
               if (isGameLost && mines[i][idx] != -1) {
-                content = <X className="text-accent" />
+                content = <X size={16} className="text-primary" />
               } else {
-                content = <FlagTriangleRight className="text-accent" />
+                content = (
+                  <FlagTriangleRight size={16} className="text-primary" />
+                )
               }
             } else {
               className = cn(
@@ -175,6 +182,9 @@ export default function Minesweeper() {
             }
             return (
               <div
+                className={className}
+                onClick={(e) => handleClick(e, idx, i)}
+                onContextMenu={(e) => handleClick(e, idx, i)}
                 onMouseEnter={() => {
                   setHoverX(idx)
                   setHoverY(i)
@@ -185,15 +195,7 @@ export default function Minesweeper() {
                 }}
                 key={'tile-' + i + '-' + idx}
               >
-                <Button
-                  className={className}
-                  size={'sm'}
-                  onClick={(e) => handleClick(e, idx, i)}
-                  onContextMenu={(e) => handleClick(e, idx, i)}
-                  disabled={t == MineTileState.SEEN && !isGameOver}
-                >
-                  {content}
-                </Button>
+                {content}
               </div>
             )
           }),
