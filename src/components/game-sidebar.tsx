@@ -1,5 +1,6 @@
 import { Link } from '@tanstack/react-router'
 import { Box } from 'lucide-react'
+import HiddenCat from './hidden-cat'
 import type { PageOption } from '@/types'
 import {
   Sidebar,
@@ -62,6 +63,9 @@ export function GameSidebar() {
               <PageLink key={g.name} page={g} />
             ))}
           </SidebarMenu>
+        </SidebarGroup>
+        <SidebarGroup>
+          <HiddenCat n={1} size={20} className="m-2" />
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>

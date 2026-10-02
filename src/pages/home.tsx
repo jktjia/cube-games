@@ -4,6 +4,7 @@ import { Separator } from '@/components/ui/separator'
 import useEmptyContext from '@/hooks/use-empty-context'
 import { gameOptions } from '@/utils'
 import { useInterfere } from '@/hooks/use-interfere'
+import HiddenCat from '@/components/hidden-cat'
 
 export default function Home() {
   const { title } = useEmptyContext()
@@ -11,7 +12,10 @@ export default function Home() {
 
   return (
     <div className="flex flex-col justify-center items-start gap-5 h-full p-2 w-full lg:w-2xl">
-      <h1 className="text-5xl font-bold">{title}</h1>
+      <div className="flex flex-row w-full items-center">
+        <h1 className="text-5xl font-bold grow text-start">{title}</h1>
+        <HiddenCat n={0} />
+      </div>
       {/* <p>
         {riceMessage
           ? riceMessage
