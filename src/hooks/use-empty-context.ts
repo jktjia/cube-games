@@ -48,7 +48,7 @@ export function useEmptyProvider({
           setShowMessage(false)
           setTitle('Cube Games')
         },
-        2.5 * 1000 * timeoutModifier,
+        5 * 1000 * timeoutModifier,
       )
     }
     const timeout = setTimeout(
