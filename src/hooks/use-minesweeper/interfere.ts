@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import type { InterfereAction } from '@/types'
 import { MineTileState, ToastVariant } from '@/types'
 
@@ -41,6 +41,8 @@ export function getMineInterfereProps({
     randomUnseenCoords(tiles),
   )
   const [cancelReveal, setCancelReveal] = useState<boolean>(false)
+
+  useEffect(() => setRandomCoords(randomUnseenCoords(tiles)), [tiles])
 
   const actions: InterfereAction[] = [
     {
