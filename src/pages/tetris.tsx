@@ -34,7 +34,7 @@ const defaultSettings = {
 
 const blockBaseCN = cn(
   'flex items-center justify-center aspect-square p-0 m-0',
-  'max-w-full text-primary text-xs lg:text-sm',
+  'max-w-full text-primary text-xs lg:text-sm min-w-2',
 )
 
 const blockEmptyCN = 'bg-input'
@@ -125,7 +125,7 @@ export default function Tetris() {
     onSwipedRight: right,
     onSwipedUp: rotate,
     onTap: hold,
-    trackMouse: false,
+    preventScrollOnSwipe: true,
   })
 
   const handleKeyDown = (e: KeyboardEvent) => {
@@ -182,7 +182,7 @@ export default function Tetris() {
       setPaused={setPaused}
       announcement={paused ? 'Paused' : annoucement}
     >
-      <div className="flex flex-row items-start gap-4 text-xl w-lg">
+      <div className="flex flex-row items-start gap-4 text-xl sm:w-md">
         <div className="flex flex-col gap-4 max-w-1/7">
           Hold
           <BlockMatrix block={held} keyPrefix="held" />

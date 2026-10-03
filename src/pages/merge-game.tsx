@@ -13,7 +13,7 @@ Arrow keys / WASD: Tile shifting`
 
 const tileBaseCN = cn(
   'flex items-center justify-center aspect-square p-0 m-0',
-  'max-w-full text-black',
+  'min-w-8 w-48 text-black max-w-full',
 )
 
 const tileEmptyCN = 'bg-input'
@@ -43,23 +43,20 @@ export default function MergeGame() {
     onSwipedDown: () => !paused && startTransition(() => down()),
     onSwipedRight: () => !paused && startTransition(() => right()),
     onSwipedUp: () => !paused && startTransition(() => up()),
-    trackMouse: false,
+    preventScrollOnSwipe: true,
   })
 
   const handleKeyDown = (e: KeyboardEvent) => {
     if (!paused) {
       startTransition(() => {
+        e.preventDefault()
         if (e.key === 'ArrowUp' || e.key === 'w') {
-          e.preventDefault()
           up()
         } else if (e.key === 'ArrowDown' || e.key === 's') {
-          e.preventDefault()
           down()
         } else if (e.key === 'ArrowLeft' || e.key === 'a') {
-          e.preventDefault()
           left()
         } else if (e.key === 'ArrowRight' || e.key === 'd') {
-          e.preventDefault()
           right()
         }
         updateActivity()
@@ -87,7 +84,7 @@ export default function MergeGame() {
       <ViewTransition>
         <div
           className={cn(
-            'grid grid-cols-4 gap-1 transition-all text-lg sm:text-xl lg:text-2xl w-xl max-h-full aspect-square',
+            'grid grid-cols-4 gap-1 transition-all text-lg sm:text-xl lg:text-2xl sm:w-md md:w-xl max-h-full aspect-square',
             isGameOver() ? ' opacity-50' : '',
           )}
           {...swipeHandler}
