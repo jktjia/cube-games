@@ -57,9 +57,10 @@ function BlockMatrix({
     m = blockMatrices[block]
   }
   const halfN = Math.ceil(m.length / 2)
-  const grid = []
-  for (let i = 0; i < 4; i++) {
-    for (let j = 0; j < 4; j++) {
+  let grid = []
+  const N = block == TetrisBlock.O || block == TetrisBlock.I ? 4 : m.length
+  for (let i = 0; i < N; i++) {
+    for (let j = 0; j < N; j++) {
       let className = cn(blockBaseCN, 'w-5')
       const mJ = j - 2 + halfN
       const mI = i - 2 + halfN
@@ -77,14 +78,28 @@ function BlockMatrix({
     }
   }
 
+  if (block == TetrisBlock.O) {
+    grid = [...grid.slice(12), ...grid.slice(0, 12)]
+  }
+
+  if (block == TetrisBlock.I) {
+    grid = grid.slice(0, 12)
+  }
+
   return (
     <div
-      className={cn(
-        'grid gap-1 transition-all max-h-full min-h-max',
-        'grid-cols-4',
-      )}
+      className={block != TetrisBlock.O ? ' grid grid-cols-8 grid-rows-8' : ''}
     >
-      {grid.map((t) => t)}
+      <div className={'col-span-8 ' + (N == 3 ? ' row-span-2' : '')} />
+      <div className={N != 3 ? 'hidden' : ''} />
+      <div
+        className={cn(
+          'grid gap-1 transition-all max-h-full min-h-max row-span-6',
+          N == 4 ? ' col-span-8 grid-cols-4' : ' col-span-6 grid-cols-3',
+        )}
+      >
+        {grid.map((t) => t)}
+      </div>
     </div>
   )
 }
@@ -190,7 +205,7 @@ export default function Tetris() {
       </GameHeader>
       <GameContent>
         <div className="flex flex-row items-start gap-4 text-xl sm:w-md">
-          <div className="flex flex-col gap-4 max-w-1/7">
+          <div className="flex flex-col max-w-1/7">
             Hold
             <BlockMatrix block={held} keyPrefix="held" />
           </div>
@@ -232,7 +247,7 @@ export default function Tetris() {
               }),
             )}
           </div>
-          <div className="flex flex-col gap-4 max-w-1/7">
+          <div className="flex flex-col max-w-1/7">
             Next
             <div>
               {next.slice(0, 3).map((n, idx) => (
