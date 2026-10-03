@@ -43,7 +43,7 @@ F2: Start a new game`
 
 const tileBaseCN = cn(
   'rounded-none flex items-center justify-center overflow-visible',
-  'max-w-full min-w-4 max-h-full min-h-4 aspect-square text-sm text-primary ',
+  'max-w-full min-w-4 max-h-full min-h-4 text-xs lg:text-sm text-primary aspect-square grow',
 )
 
 const tileEmptyCN = 'bg-input'
@@ -135,72 +135,75 @@ export default function Minesweeper() {
     >
       <div
         className={cn(
-          'grid gap-1 transition-all w-5xl',
+          'flex flex-col w-xl md:w-3xl lg:w-5xl gap-1 transition-all',
           difficultySettings[difficulty].gridCols,
           isGameOver ? 'opacity-50' : '',
         )}
       >
-        {tiles.flatMap((r, i) =>
-          r.map((t, idx) => {
-            let className = tileBaseCN
-            let content: ReactNode = <></>
-            if (t == MineTileState.NOT_SEEN || !mines) {
-              className = tileEmptyCN
-              if (!isGameLost) {
-                className = cn(className, 'hover:cursor-pointer')
-              }
-              if (isGameLost && mines && mines[i][idx] == -1) {
-                content = <Bomb size={16} className="text-primary" />
-              } else if (riceMessage) {
-                content =
-                  splitMessage[(i * r.length + idx) % splitMessage.length]
-              }
-            } else if (t == MineTileState.FLAG) {
-              className = tileEmptyCN
-              if (!isGameLost) {
-                className = cn(className, 'hover:cursor-pointer')
-              }
-              if (isGameLost && mines[i][idx] != -1) {
-                content = <X size={16} className="text-primary" />
+        {tiles.flatMap((r, i) => (
+          <div className="flex flex-row w-full gap-1">
+            {r.map((t, idx) => {
+              let className = tileBaseCN
+              let content: ReactNode = <></>
+              if (t == MineTileState.NOT_SEEN || !mines) {
+                className = cn(className, tileEmptyCN)
+                if (!isGameLost) {
+                  className = cn(className, 'hover:cursor-pointer')
+                }
+                if (isGameLost && mines && mines[i][idx] == -1) {
+                  content = <Bomb size={16} className="text-primary" />
+                } else if (riceMessage) {
+                  content =
+                    splitMessage[(i * r.length + idx) % splitMessage.length]
+                }
+              } else if (t == MineTileState.FLAG) {
+                className = cn(className, tileEmptyCN)
+                if (!isGameLost) {
+                  className = cn(className, 'hover:cursor-pointer')
+                }
+                if (isGameLost && mines[i][idx] != -1) {
+                  content = <X size={16} className="text-primary" />
+                } else {
+                  content = (
+                    <FlagTriangleRight size={16} className="text-primary" />
+                  )
+                }
               } else {
-                content = (
-                  <FlagTriangleRight size={16} className="text-primary" />
+                className = cn(
+                  className,
+                  'text-black disabled:opacity-100',
+                  mines[i][idx] == 0
+                    ? 'bg-background'
+                    : gradient[(mines[i][idx] - 1) * 2 + 1],
                 )
+                if (mines[i][idx] > 0) {
+                  content = mines[i][idx]
+                } else if (riceMessage) {
+                  content =
+                    splitMessage[(i * r.length + t) % splitMessage.length]
+                }
               }
-            } else {
-              className = cn(
-                className,
-                'text-black disabled:opacity-100',
-                mines[i][idx] == 0
-                  ? 'bg-background'
-                  : gradient[(mines[i][idx] - 1) * 2 + 1],
+              return (
+                <div
+                  className={className}
+                  onClick={(e) => handleClick(e, idx, i)}
+                  onContextMenu={(e) => handleClick(e, idx, i)}
+                  onMouseEnter={() => {
+                    setHoverX(idx)
+                    setHoverY(i)
+                  }}
+                  onMouseLeave={() => {
+                    setHoverX(undefined)
+                    setHoverY(undefined)
+                  }}
+                  key={'tile-' + i + '-' + idx}
+                >
+                  {content}
+                </div>
               )
-              if (mines[i][idx] > 0) {
-                content = mines[i][idx]
-              } else if (riceMessage) {
-                content = splitMessage[(i * r.length + t) % splitMessage.length]
-              }
-            }
-            return (
-              <div
-                className={className}
-                onClick={(e) => handleClick(e, idx, i)}
-                onContextMenu={(e) => handleClick(e, idx, i)}
-                onMouseEnter={() => {
-                  setHoverX(idx)
-                  setHoverY(i)
-                }}
-                onMouseLeave={() => {
-                  setHoverX(undefined)
-                  setHoverY(undefined)
-                }}
-                key={'tile-' + i + '-' + idx}
-              >
-                {content}
-              </div>
-            )
-          }),
-        )}
+            })}
+          </div>
+        ))}
       </div>
     </GameContent>
   )

@@ -124,7 +124,7 @@ export default function GameContent({
         )}
         <div className="text-end grow">{scoreText}</div>
       </CardHeader>
-      <CardContent className="items-center flex justify-center text-3xl font-semibold grow object-fill">
+      <CardContent className="items-center flex justify-center text-3xl font-semibold grow object-fill overflow-auto">
         {children}
         {isGameOver && (
           <div className="absolute w-max bg-background/70 rounded p-2">

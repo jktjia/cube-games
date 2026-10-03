@@ -23,8 +23,8 @@ Escape: Pause/unpause`
 // }
 
 const tileBaseCN = cn(
-  'rounded-none flex items-center justify-center overflow-visible',
-  'max-w-full min-w-full aspect-square text-sm text-primary',
+  'rounded-none flex items-center justify-center overflow-hide',
+  'max-w-full min-w-full aspect-square text-xs lg:text-sm text-primary',
 )
 
 const tileEmptyCN = 'bg-input'

@@ -33,7 +33,7 @@ const defaultSettings = {
 
 const blockBaseCN = cn(
   'flex items-center justify-center aspect-square p-0 m-0',
-  'max-w-full text-primary text-sm',
+  'max-w-full text-primary text-xs lg:text-sm',
 )
 
 const blockEmptyCN = 'bg-input'
