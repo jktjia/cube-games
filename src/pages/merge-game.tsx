@@ -1,4 +1,5 @@
 import { ViewTransition, startTransition, useEffect, useState } from 'react'
+import { useSwipeable } from 'react-swipeable'
 import useMergeGame from '@/hooks/use-merge-game'
 import useEmptyContext from '@/hooks/use-empty-context'
 import GameContent from '@/components/game-content'
@@ -36,6 +37,14 @@ export default function MergeGame() {
   const [paused, setPaused] = useState<boolean>(false)
 
   useInterfere(interfereProps)
+
+  const swipeHandler = useSwipeable({
+    onSwipedLeft: () => !paused && startTransition(() => left()),
+    onSwipedDown: () => !paused && startTransition(() => down()),
+    onSwipedRight: () => !paused && startTransition(() => right()),
+    onSwipedUp: () => !paused && startTransition(() => up()),
+    trackMouse: false,
+  })
 
   const handleKeyDown = (e: KeyboardEvent) => {
     if (!paused) {
@@ -81,6 +90,7 @@ export default function MergeGame() {
             'grid grid-cols-4 gap-1 transition-all text-lg sm:text-xl lg:text-2xl w-xl max-h-full aspect-square',
             isGameOver() ? ' opacity-50' : '',
           )}
+          {...swipeHandler}
         >
           {tiles.flatMap((r, i) =>
             r.map((t, idx) =>

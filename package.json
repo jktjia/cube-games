@@ -33,6 +33,7 @@
     "react-dom": "^19.3.0",
     "react-head": "^3.4.2",
     "react-hook-form": "^7.89.0",
+    "react-swipeable": "^7.0.2",
     "shadcn": "^3.8.5",
     "sonner": "^2.0.8",
     "tailwind": "^4.0.0",

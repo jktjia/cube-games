@@ -1,4 +1,5 @@
 import { useEffect, useMemo } from 'react'
+import { useSwipeable } from 'react-swipeable'
 import { gradient } from '@/utils/colors'
 import { SnakeTileState } from '@/types'
 import useEmptyContext from '@/hooks/use-empty-context'
@@ -48,6 +49,14 @@ export default function Snake() {
   } = useSnake()
 
   useInterfere(interfereProps)
+
+  const swipeHandler = useSwipeable({
+    onSwipedLeft: () => !isGameOver && left(),
+    onSwipedDown: () => !isGameOver && down(),
+    onSwipedRight: () => !isGameOver && right(),
+    onSwipedUp: () => !isGameOver && up(),
+    trackMouse: false,
+  })
 
   const handleKeyDown = (e: KeyboardEvent) => {
     if (!isGameOver) {
@@ -101,6 +110,7 @@ export default function Snake() {
         className={cn(
           'grid gap-1 transition-all w-2xl max-w-full grid-cols-20 ',
         )}
+        {...swipeHandler}
       >
         {tiles.flatMap((r, i) =>
           r.map((t, idx) => {

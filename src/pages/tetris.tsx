@@ -1,4 +1,5 @@
 import { useEffect, useMemo } from 'react'
+import { useSwipeable } from 'react-swipeable'
 import { gradient } from '@/utils/colors'
 import { TetrisBlock } from '@/types'
 import useEmptyContext from '@/hooks/use-empty-context'
@@ -118,6 +119,15 @@ export default function Tetris() {
     [riceMessage],
   )
 
+  const swipeHandler = useSwipeable({
+    onSwipedLeft: left,
+    onSwipedDown: hardDown,
+    onSwipedRight: right,
+    onSwipedUp: rotate,
+    onTap: hold,
+    trackMouse: false,
+  })
+
   const handleKeyDown = (e: KeyboardEvent) => {
     if (e.key === 'ArrowUp') {
       e.preventDefault()
@@ -184,6 +194,7 @@ export default function Tetris() {
             'grid-cols-10',
             'grid-rows-' + defaultSettings.height,
           )}
+          {...swipeHandler}
         >
           {visibleTiles.flatMap((r, i) =>
             r.map((t, idx) => {
