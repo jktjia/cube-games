@@ -11,6 +11,9 @@ interface EmptyContextType {
   riceMessage?: string
   interfereAllowed: boolean
   setInterfereAllowed: (b: boolean) => void
+  ignoreCount: number
+  foundPages: string[]
+  findPage: (id: string) => void
 }
 
 const EmptyContext = createContext<EmptyContextType>({
@@ -20,6 +23,9 @@ const EmptyContext = createContext<EmptyContextType>({
   updateActivity: () => console.log(new Date()),
   interfereAllowed: false,
   setInterfereAllowed: console.log,
+  ignoreCount: 0,
+  foundPages: [],
+  findPage: console.log,
 })
 
 export default function EmptyProvider({

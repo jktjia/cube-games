@@ -1,5 +1,6 @@
 import { Link } from '@tanstack/react-router'
 import { Box } from 'lucide-react'
+import { useMemo } from 'react'
 import HiddenCat from './hidden-cat'
 import { Button } from './ui/button'
 import type { PageOption } from '@/types'
@@ -15,7 +16,7 @@ import {
   SidebarTrigger,
   useSidebar,
 } from '@/components/ui/sidebar'
-import { cn, footerLinks, gameOptions } from '@/utils'
+import { cn, footerLinks, gameOptions, hiddenPages } from '@/utils'
 import useEmptyContext from '@/hooks/use-empty-context'
 
 function PageLink({
@@ -28,6 +29,7 @@ function PageLink({
   className?: string
 }) {
   const { toggleSidebar } = useSidebar()
+
   return (
     <Link to={page.href}>
       <SidebarMenuButton
@@ -44,13 +46,18 @@ function PageLink({
 }
 
 export function GameSidebar() {
-  const { title } = useEmptyContext()
+  const { title, foundPages } = useEmptyContext()
+
+  const hiddenOptions = useMemo(
+    () => hiddenPages.filter((p) => foundPages.some((f) => f == p.id)),
+    [foundPages],
+  )
 
   return (
     <Sidebar>
       <SidebarHeader className="flex flex-row items-center justify-start">
         <PageLink
-          page={{ name: title, href: '/', icon: Box }}
+          page={{ id: 'home', name: title, href: '/', icon: Box }}
           className="px-4 h-9"
         />
         <div className="grow" />
@@ -65,6 +72,16 @@ export function GameSidebar() {
             ))}
           </SidebarMenu>
         </SidebarGroup>
+        {hiddenOptions.length > 0 && (
+          <SidebarGroup>
+            <SidebarGroupLabel>Other</SidebarGroupLabel>
+            <SidebarMenu>
+              {hiddenOptions.map((h) => (
+                <PageLink key={h.name} page={h} />
+              ))}
+            </SidebarMenu>
+          </SidebarGroup>
+        )}
         <SidebarGroup>
           <HiddenCat n={1} size={20} className="m-2" />
         </SidebarGroup>

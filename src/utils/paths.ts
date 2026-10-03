@@ -6,4 +6,4 @@ export const SNAKE_PATH = 'snake'
 export const SETTINGS_PATH = 'settings'
 
 export const DONT_LEAVE_PATH = 'please-dont-leave'
-export const FEED_ME_PATH = '5468657920776f6e2774206c6574206d65206561742e'
+export const MONITOR_PATH = '4b65657020616e20657965206f6e20686572'

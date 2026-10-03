@@ -4,8 +4,14 @@ import type { UseNavigateResult } from '@tanstack/react-router'
 import { EmptyContext } from '@/components/providers/empty-provider'
 import { boredMessages } from '@/utils/messages'
 import { DONT_LEAVE_PATH } from '@/utils/paths'
+import { decrypt, encrypt } from '@/utils'
 
 export const timeoutModifier = 1
+
+interface EmptyState {
+  ignoreCount: number
+  foundPages: string[]
+}
 
 export function useEmptyProvider({
   navigate,
@@ -22,13 +28,46 @@ export function useEmptyProvider({
   const [pokes, setPokes] = useState<number>(0)
 
   const [interfereAllowed, setInterfereAllowed] = useState<boolean>(true)
-  const [ignoreCount, setIgnoreCount] = useState<number>(0)
+  const [ignoreCount, setIgnoreCount] = useState<number>(() => {
+    const localEmpty = localStorage.getItem('empty')
+    if (localEmpty) {
+      const state = JSON.parse(decrypt(localEmpty)) as EmptyState
+      return state.ignoreCount
+    }
+    return 0
+  })
+
+  const [foundPages, setFoundPages] = useState<string[]>(() => {
+    const localEmpty = localStorage.getItem('empty')
+    if (localEmpty) {
+      const state = JSON.parse(decrypt(localEmpty)) as EmptyState
+      return state.foundPages
+    }
+    return []
+  })
 
   const [startTime, _] = useState<Date>(new Date())
+  console.log(foundPages)
 
   const updateLocal = (activity: Date) => {
     localStorage.setItem('last-activity', JSON.stringify(activity))
   }
+
+  useEffect(() => {
+    localStorage.setItem(
+      'empty',
+      encrypt(JSON.stringify({ ignoreCount, foundPages })),
+    )
+  }, [ignoreCount, foundPages])
+
+  const findPage = useCallback(
+    (id: string) => {
+      setFoundPages((found) =>
+        found.some((f) => f == id) ? found : [...found, id],
+      )
+    },
+    [setFoundPages],
+  )
 
   const updateActivity = useCallback(() => {
     const now = new Date()
@@ -105,7 +144,9 @@ export function useEmptyProvider({
     riceMessage,
     interfereAllowed,
     setInterfereAllowed: toggleInterference,
-    // setInterfereAllowed: setInterfereAllowed,
+    ignoreCount,
+    foundPages,
+    findPage,
   }
 }
 
