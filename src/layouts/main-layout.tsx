@@ -9,10 +9,12 @@ export default function MainLayout() {
   return (
     <>
       <Title>{title}</Title>
-      <GameSidebarTrigger className="p-2 md:fixed z-10" />
       <GameSidebar />
-      <div className="container mx-auto p-4 sm:p-8 text-center relative max-w-full max-h-full justify-center items-center flex h-full w-full">
-        <Outlet />
+      <div className="max-w-full max-h-full flex flex-col h-full">
+        <GameSidebarTrigger className="p-2 md:fixed z-10" />
+        <div className="container grow mx-auto p-4 sm:p-8 text-center relative justify-center items-center flex">
+          <Outlet />
+        </div>
       </div>
     </>
   )

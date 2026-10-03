@@ -55,7 +55,7 @@ export default function Snake() {
     onSwipedDown: () => !isGameOver && down(),
     onSwipedRight: () => !isGameOver && right(),
     onSwipedUp: () => !isGameOver && up(),
-    trackMouse: false,
+    preventScrollOnSwipe: true,
   })
 
   const handleKeyDown = (e: KeyboardEvent) => {

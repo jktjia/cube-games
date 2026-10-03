@@ -32,7 +32,7 @@ const difficultySettings: Record<Difficulty, ColsSettings> = {
   },
   [Difficulty.EXPERT]: {
     gridCols: 'grid-cols-30',
-    wMax: 'w-xl md:w-3xl lg:w-5xl',
+    wMax: 'w-xl md:w-3xl lg:w-4xl',
     width: 30,
     height: 16,
     mineCount: 99,

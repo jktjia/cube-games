@@ -39,7 +39,7 @@ export default function GameContent({
   children?: ReactNode
 }) {
   return (
-    <Card className="bg-card/50 backdrop-blur-sm border-muted max-w-full max-h-full flex flex-col items-center justify-center">
+    <Card className="bg-card/50 backdrop-blur-sm border-muted max-w-full max-h-full flex flex-col justify-center">
       <CardHeader className="text-lg font-semibold flex flex-col sm:flex-row gap-1 w-full">
         <div className="flex flex-row gap-1">
           <Button
@@ -125,9 +125,9 @@ export default function GameContent({
         </div>
         <div className="text-end grow">{scoreText}</div>
       </CardHeader>
-      <CardContent className="grow overflow-auto">{children}</CardContent>{' '}
+      <CardContent className="grow overflow-auto">{children}</CardContent>
       {(isGameOver || announcement) && (
-        <div className="text-3xl font-semibold absolute w-max h-max bg-background/70 rounded p-2">
+        <div className="self-center text-3xl font-semibold absolute w-max h-max bg-background/70 rounded p-2">
           {isGameOver ? gameOverMessage : announcement}
         </div>
       )}
