@@ -1,14 +1,15 @@
-import { useEffect, useMemo } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { useSwipeable } from 'react-swipeable'
 import { gradient } from '@/utils/colors'
 import { TetrisBlock } from '@/types'
 import useEmptyContext from '@/hooks/use-empty-context'
 import { cn } from '@/utils'
-import { GameCard, GameContent, GameHeader } from '@/components/game-content'
+import { GameCard, GameContent, GameHeader } from '@/components/game-card'
 import useTetris from '@/hooks/use-tetris'
 import { blockMatrices } from '@/hooks/use-tetris/consts'
 import { useInterfere } from '@/hooks/use-interfere'
 import { Button } from '@/components/ui/button'
+import HiddenCat from '@/components/hidden-cat'
 
 const blockColors = {
   [TetrisBlock.T]: gradient[0],
@@ -88,7 +89,11 @@ function BlockMatrix({
 
   return (
     <div
-      className={block != TetrisBlock.O ? ' grid grid-cols-8 grid-rows-8' : ''}
+      className={
+        block != undefined && block != TetrisBlock.O
+          ? ' grid grid-cols-8 grid-rows-8'
+          : ''
+      }
     >
       <div className={'col-span-8 ' + (N == 3 ? ' row-span-2' : '')} />
       <div className={N != 3 ? 'hidden' : ''} />
@@ -111,7 +116,7 @@ export default function Tetris() {
     held,
     next,
     ghost,
-    // level,
+    level,
     score,
     isGameOver,
     left,
@@ -144,31 +149,32 @@ export default function Tetris() {
     preventScrollOnSwipe: true,
   })
 
-  const handleKeyDown = (e: KeyboardEvent) => {
-    if (e.key === 'ArrowUp') {
-      e.preventDefault()
-      rotate()
-    } else if (e.key === ' ') {
-      e.preventDefault()
-      hardDown()
-    } else if (e.key === 'ArrowLeft') {
-      e.preventDefault()
-      left()
-    } else if (e.key === 'ArrowRight') {
-      e.preventDefault()
-      right()
-    } else if (e.key === 'c' || e.key === 'Shift') {
-      e.preventDefault()
-      hold()
-    } else if (e.key === 'ArrowDown') {
-      e.preventDefault()
-      setSoftDown(true)
-    } else if (e.key === 'Escape') {
-      e.preventDefault()
-      togglePause()
-    }
-    updateActivity()
-  }
+  const keyMap = useMemo(
+    () =>
+      new Map([
+        ['ArrowUp', rotate],
+        ['ArrowDown', () => setSoftDown(true)],
+        ['ArrowLeft', left],
+        ['ArrowRight', right],
+        ['c', hold],
+        ['Shift', hold],
+        ['Escape', togglePause],
+        [' ', hardDown],
+      ]),
+    [rotate, setSoftDown, left, right, hold, togglePause, hardDown],
+  )
+
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      if (keyMap.has(e.key)) {
+        e.preventDefault()
+        const action = keyMap.get(e.key)
+        action && action()
+        updateActivity()
+      }
+    },
+    [isGameOver, keyMap, updateActivity],
+  )
 
   const handleKeyUp = (e: KeyboardEvent) => {
     if (e.key === 'ArrowDown') {
@@ -207,14 +213,12 @@ export default function Tetris() {
         <div className="flex flex-row items-start gap-4 text-xl sm:w-md">
           <div className="flex flex-col max-w-1/7">
             Hold
-            <BlockMatrix block={held} keyPrefix="held" />
+            <BlockMatrix block={held} keyPrefix="held" />{' '}
+            <div className="font-semibold text-base my-2">{`Level: ${level}`}</div>
+            <HiddenCat n={4} className="self-center my-2" />
           </div>
           <div
-            className={cn(
-              'grid gap-1 transition-all grow',
-              // 'grid gap-1 transition-all block-fit',
-              'grid-cols-10',
-            )}
+            className={cn('grid gap-1 transition-all grow', 'grid-cols-10')}
             {...swipeHandler}
           >
             {visibleTiles.flatMap((r, i) =>

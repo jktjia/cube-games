@@ -1,5 +1,6 @@
 import { createContext } from 'react'
 import { useCatSetup } from '@/hooks/use-cats'
+import { CAT_COUNT } from '@/utils'
 
 interface CatContextType {
   isCatFound: (n: number) => boolean
@@ -23,7 +24,7 @@ export default function CatProvider({
 }: {
   children: React.ReactNode
 }) {
-  const context = useCatSetup(2)
+  const context = useCatSetup(CAT_COUNT)
 
   return <CatContext.Provider value={context}>{children}</CatContext.Provider>
 }

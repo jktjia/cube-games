@@ -26,3 +26,5 @@ export const gameOptions: PageOption[] = [
 export const footerLinks: PageOption[] = [
   { name: 'Settings', href: '/' + SETTINGS_PATH, icon: Settings },
 ]
+
+export const CAT_COUNT = 5

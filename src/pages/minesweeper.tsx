@@ -1,4 +1,4 @@
-import { Bomb, FlagTriangleRight, X } from 'lucide-react'
+import { Bomb, FlagTriangleRight, MousePointerClick, X } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import type { ReactNode } from 'react'
 import type { MinesweeperSettings } from '@/types'
@@ -6,7 +6,7 @@ import useEmptyContext from '@/hooks/use-empty-context'
 import useMinesweeper from '@/hooks/use-minesweeper'
 import { Difficulty, MineTileState } from '@/types'
 import { cn } from '@/utils'
-import { GameCard, GameContent, GameHeader } from '@/components/game-content'
+import { GameCard, GameContent, GameHeader } from '@/components/game-card'
 import { gradient } from '@/utils/colors'
 import { useInterfere } from '@/hooks/use-interfere'
 import { Label } from '@/components/ui/label'
@@ -19,6 +19,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
+import { Switch } from '@/components/ui/switch'
 
 interface ColsSettings extends MinesweeperSettings {
   gridCols: string
@@ -81,6 +82,7 @@ export default function Minesweeper() {
     interfereProps,
   } = useMinesweeper(settings)
   const [paused, setPaused] = useState<boolean>(false)
+  const [swapFlagReveal, setSwapFlagReveal] = useState<boolean>(false)
 
   useInterfere(interfereProps)
 
@@ -92,10 +94,18 @@ export default function Minesweeper() {
     if (!isGameOver) {
       if (e.button === 0) {
         e.preventDefault()
-        reveal(x, y)
+        if (swapFlagReveal) {
+          flag(x, y)
+        } else {
+          reveal(x, y)
+        }
       } else if (e.button === 2) {
         e.preventDefault()
-        flag(x, y)
+        if (swapFlagReveal) {
+          reveal(x, y)
+        } else {
+          flag(x, y)
+        }
       }
     } else {
       restart()
@@ -188,6 +198,22 @@ export default function Minesweeper() {
             </RadioGroup>
           </DialogContent>
         </Dialog>
+        <div className="inline-flex items-center gap-2 md:hidden">
+          <Switch
+            id="icon-label"
+            checked={swapFlagReveal}
+            onCheckedChange={setSwapFlagReveal}
+            aria-label="Toggle flag/reveal"
+          />
+          <Label htmlFor="icon-label">
+            <span className="sr-only">Toggle flag/reveal</span>
+            {swapFlagReveal ? (
+              <FlagTriangleRight className="size-4" aria-hidden="true" />
+            ) : (
+              <MousePointerClick className="size-4" aria-hidden="true" />
+            )}
+          </Label>
+        </div>
       </GameHeader>
       <GameContent>
         <div

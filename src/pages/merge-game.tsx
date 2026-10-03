@@ -1,12 +1,20 @@
-import { ViewTransition, startTransition, useEffect, useState } from 'react'
+import {
+  ViewTransition,
+  startTransition,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react'
 import { useSwipeable } from 'react-swipeable'
 import useMergeGame from '@/hooks/use-merge-game'
 import useEmptyContext from '@/hooks/use-empty-context'
-import { GameCard, GameContent, GameHeader } from '@/components/game-content'
+import { GameCard, GameContent, GameHeader } from '@/components/game-card'
 import { gradient } from '@/utils/colors'
 import { cn } from '@/utils'
 import { Button } from '@/components/ui/button'
 import { useInterfere } from '@/hooks/use-interfere'
+import HiddenCat from '@/components/hidden-cat'
 
 const controls = `When two tiles having the same number touch, they join into one.
 Arrow keys / WASD: Tile shifting`
@@ -46,23 +54,34 @@ export default function MergeGame() {
     preventScrollOnSwipe: true,
   })
 
-  const handleKeyDown = (e: KeyboardEvent) => {
-    if (!paused) {
-      startTransition(() => {
-        e.preventDefault()
-        if (e.key === 'ArrowUp' || e.key === 'w') {
-          up()
-        } else if (e.key === 'ArrowDown' || e.key === 's') {
-          down()
-        } else if (e.key === 'ArrowLeft' || e.key === 'a') {
-          left()
-        } else if (e.key === 'ArrowRight' || e.key === 'd') {
-          right()
-        }
-        updateActivity()
-      })
-    }
-  }
+  const keyMap = useMemo(
+    () =>
+      new Map([
+        ['ArrowUp', up],
+        ['w', up],
+        ['ArrowDown', down],
+        ['s', down],
+        ['ArrowLeft', left],
+        ['a', left],
+        ['ArrowRight', right],
+        ['d', right],
+      ]),
+    [up, down, left, right],
+  )
+
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      if (!paused && keyMap.has(e.key)) {
+        startTransition(() => {
+          e.preventDefault()
+          const action = keyMap.get(e.key)
+          action && action()
+          updateActivity()
+        })
+      }
+    },
+    [paused, keyMap, updateActivity],
+  )
 
   useEffect(() => {
     document.addEventListener('keydown', handleKeyDown)
@@ -79,7 +98,9 @@ export default function MergeGame() {
         scoreText={`Score: ${score}`}
         setPaused={setPaused}
         controls={controls}
-      />
+      >
+        <HiddenCat n={2} className="self-center" />
+      </GameHeader>
       <GameContent>
         <ViewTransition>
           <div

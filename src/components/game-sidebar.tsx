@@ -1,6 +1,7 @@
 import { Link } from '@tanstack/react-router'
 import { Box } from 'lucide-react'
 import HiddenCat from './hidden-cat'
+import { Button } from './ui/button'
 import type { PageOption } from '@/types'
 import {
   Sidebar,
@@ -76,5 +77,19 @@ export function GameSidebar() {
         </SidebarMenu>
       </SidebarFooter>
     </Sidebar>
+  )
+}
+
+export function GameSidebarTrigger({ className }: { className?: string }) {
+  const { toggleSidebar } = useSidebar()
+  const { title } = useEmptyContext()
+
+  return (
+    <div className={className}>
+      <Button size={'lg'} onClick={toggleSidebar} variant={'ghost'}>
+        <Box />
+        {title}
+      </Button>
+    </div>
   )
 }
