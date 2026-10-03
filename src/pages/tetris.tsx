@@ -4,10 +4,11 @@ import { gradient } from '@/utils/colors'
 import { TetrisBlock } from '@/types'
 import useEmptyContext from '@/hooks/use-empty-context'
 import { cn } from '@/utils'
-import GameContent from '@/components/game-content'
+import { GameCard, GameContent, GameHeader } from '@/components/game-content'
 import useTetris from '@/hooks/use-tetris'
 import { blockMatrices } from '@/hooks/use-tetris/consts'
 import { useInterfere } from '@/hooks/use-interfere'
+import { Button } from '@/components/ui/button'
 
 const blockColors = {
   [TetrisBlock.T]: gradient[0],
@@ -123,8 +124,8 @@ export default function Tetris() {
     onSwipedLeft: left,
     onSwipedDown: hardDown,
     onSwipedRight: right,
-    onSwipedUp: rotate,
-    onTap: hold,
+    onSwipedUp: hold,
+    onTap: rotate,
     preventScrollOnSwipe: true,
   })
 
@@ -172,68 +173,75 @@ export default function Tetris() {
   }, [handleKeyDown])
 
   return (
-    <GameContent
+    <GameCard
       gameOverMessage={'You Lost!'}
       isGameOver={isGameOver}
-      restart={restart}
-      // gameName="Minesweeper"
-      controls={controls}
-      scoreText={`Score: ${score.toLocaleString('en-US')}`}
-      setPaused={setPaused}
       announcement={paused ? 'Paused' : annoucement}
     >
-      <div className="flex flex-row items-start gap-4 text-xl sm:w-md">
-        <div className="flex flex-col gap-4 max-w-1/7">
-          Hold
-          <BlockMatrix block={held} keyPrefix="held" />
-        </div>
-        <div
-          className={cn(
-            'grid gap-1 transition-all grow',
-            // 'grid gap-1 transition-all block-fit',
-            'grid-cols-10',
-          )}
-          {...swipeHandler}
-        >
-          {visibleTiles.flatMap((r, i) =>
-            r.map((t, idx) => {
-              let className = blockBaseCN
-              let content = ''
-              if (t != null && !paused) {
-                className = cn(className, blockColors[t])
-              } else if (
-                ghost.some(({ x, y }) => y == i && x == idx) &&
-                !paused
-              ) {
-                className = cn(className, 'bg-accent')
-                if (riceMessage) {
-                  content =
-                    splitMessage[(i * r.length + idx) % splitMessage.length]
+      <GameHeader
+        restart={restart}
+        controls={controls}
+        scoreText={`Score: ${score.toLocaleString('en-US')}`}
+        setPaused={setPaused}
+      >
+        <Button onClick={togglePause} variant={'outline'} className="md:hidden">
+          {paused ? 'Unpause' : 'Pause'}
+        </Button>
+      </GameHeader>
+      <GameContent>
+        <div className="flex flex-row items-start gap-4 text-xl sm:w-md">
+          <div className="flex flex-col gap-4 max-w-1/7">
+            Hold
+            <BlockMatrix block={held} keyPrefix="held" />
+          </div>
+          <div
+            className={cn(
+              'grid gap-1 transition-all grow',
+              // 'grid gap-1 transition-all block-fit',
+              'grid-cols-10',
+            )}
+            {...swipeHandler}
+          >
+            {visibleTiles.flatMap((r, i) =>
+              r.map((t, idx) => {
+                let className = blockBaseCN
+                let content = ''
+                if (t != null && !paused) {
+                  className = cn(className, blockColors[t])
+                } else if (
+                  ghost.some(({ x, y }) => y == i && x == idx) &&
+                  !paused
+                ) {
+                  className = cn(className, 'bg-accent')
+                  if (riceMessage) {
+                    content =
+                      splitMessage[(i * r.length + idx) % splitMessage.length]
+                  }
+                } else {
+                  className = cn(className, blockEmptyCN)
+                  if (riceMessage) {
+                    content =
+                      splitMessage[(i * r.length + idx) % splitMessage.length]
+                  }
                 }
-              } else {
-                className = cn(className, blockEmptyCN)
-                if (riceMessage) {
-                  content =
-                    splitMessage[(i * r.length + idx) % splitMessage.length]
-                }
-              }
-              return (
-                <div className={className} key={'tile-' + i + '-' + idx}>
-                  {content}
-                </div>
-              )
-            }),
-          )}
-        </div>
-        <div className="flex flex-col gap-4 max-w-1/7">
-          Next
-          <div>
-            {next.slice(0, 3).map((n, idx) => (
-              <BlockMatrix block={n} keyPrefix={`next-${idx}`} key={idx} />
-            ))}
+                return (
+                  <div className={className} key={'tile-' + i + '-' + idx}>
+                    {content}
+                  </div>
+                )
+              }),
+            )}
+          </div>
+          <div className="flex flex-col gap-4 max-w-1/7">
+            Next
+            <div>
+              {next.slice(0, 3).map((n, idx) => (
+                <BlockMatrix block={n} keyPrefix={`next-${idx}`} key={idx} />
+              ))}
+            </div>
           </div>
         </div>
-      </div>
-    </GameContent>
+      </GameContent>
+    </GameCard>
   )
 }

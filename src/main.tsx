@@ -136,7 +136,7 @@ if (rootElement && !rootElement.innerHTML) {
       <HeadProvider>
         <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
           <RouterProvider router={router} />
-          <Toaster position="top-right" richColors />
+          <Toaster position="top-right" richColors closeButton />
         </ThemeProvider>
       </HeadProvider>
     </StrictMode>,

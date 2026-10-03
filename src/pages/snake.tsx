@@ -4,9 +4,10 @@ import { gradient } from '@/utils/colors'
 import { SnakeTileState } from '@/types'
 import useEmptyContext from '@/hooks/use-empty-context'
 import { cn } from '@/utils'
-import GameContent from '@/components/game-content'
+import { GameCard, GameContent, GameHeader } from '@/components/game-content'
 import useSnake from '@/hooks/use-snake'
 import { useInterfere } from '@/hooks/use-interfere'
+import { Button } from '@/components/ui/button'
 
 const tileColors = {
   [SnakeTileState.APPLE]: gradient[13],
@@ -96,43 +97,50 @@ export default function Snake() {
   }, [handleKeyDown])
 
   return (
-    <GameContent
+    <GameCard
       gameOverMessage={isGameLost ? 'You Lost!' : 'You Won!'}
       isGameOver={isGameOver}
-      restart={restart}
-      setPaused={setPaused}
-      // gameName="Minesweeper"
-      controls={controls}
-      scoreText={`Score: ${score}`}
       announcement={paused ? 'Paused' : undefined}
     >
-      <div
-        className={cn(
-          'grid gap-1 transition-all w-2xl max-w-full grid-cols-20 ',
-        )}
-        {...swipeHandler}
+      <GameHeader
+        restart={restart}
+        setPaused={setPaused}
+        controls={controls}
+        scoreText={`Score: ${score}`}
       >
-        {tiles.flatMap((r, i) =>
-          r.map((t, idx) => {
-            let className = tileBaseCN
-            let content = ''
-            if (t != null && !paused) {
-              className = cn(className, tileColors[t])
-            } else {
-              className = cn(className, tileEmptyCN)
-              if (riceMessage) {
-                content =
-                  splitMessage[(i * r.length + idx) % splitMessage.length]
+        <Button onClick={togglePause} variant={'outline'} className="md:hidden">
+          {paused ? 'Unpause' : 'Pause'}
+        </Button>
+      </GameHeader>
+      <GameContent>
+        <div
+          className={cn(
+            'grid gap-1 transition-all w-2xl max-w-full grid-cols-20 ',
+          )}
+          {...swipeHandler}
+        >
+          {tiles.flatMap((r, i) =>
+            r.map((t, idx) => {
+              let className = tileBaseCN
+              let content = ''
+              if (t != null && !paused) {
+                className = cn(className, tileColors[t])
+              } else {
+                className = cn(className, tileEmptyCN)
+                if (riceMessage) {
+                  content =
+                    splitMessage[(i * r.length + idx) % splitMessage.length]
+                }
               }
-            }
-            return (
-              <div className={className} key={'tile-' + i + '-' + idx}>
-                {content}
-              </div>
-            )
-          }),
-        )}
-      </div>
-    </GameContent>
+              return (
+                <div className={className} key={'tile-' + i + '-' + idx}>
+                  {content}
+                </div>
+              )
+            }),
+          )}
+        </div>
+      </GameContent>
+    </GameCard>
   )
 }
