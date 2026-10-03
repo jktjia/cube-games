@@ -192,7 +192,6 @@ export default function Tetris() {
             'grid gap-1 transition-all grow',
             // 'grid gap-1 transition-all block-fit',
             'grid-cols-10',
-            'grid-rows-' + defaultSettings.height,
           )}
           {...swipeHandler}
         >

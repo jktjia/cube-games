@@ -12,23 +12,27 @@ import { useInterfere } from '@/hooks/use-interfere'
 
 interface ColsSettings extends MinesweeperSettings {
   gridCols: string
+  wMax: string
 }
 
 const difficultySettings: Record<Difficulty, ColsSettings> = {
   [Difficulty.BEGINNER]: {
     gridCols: 'grid-cols-9',
+    wMax: 'w-md sm:w-lg',
     width: 9,
     height: 9,
     mineCount: 10,
   },
   [Difficulty.INTERMEDIATE]: {
     gridCols: 'grid-cols-16',
+    wMax: 'w-lg md:w-2xl lg:w-2xl',
     width: 16,
     height: 16,
     mineCount: 40,
   },
   [Difficulty.EXPERT]: {
     gridCols: 'grid-cols-30',
+    wMax: 'w-xl md:w-3xl lg:w-5xl',
     width: 30,
     height: 16,
     mineCount: 99,
@@ -43,7 +47,7 @@ F2: Start a new game`
 
 const tileBaseCN = cn(
   'rounded-none flex items-center justify-center overflow-visible',
-  'max-w-full min-w-4 max-h-full min-h-4 text-xs lg:text-sm text-primary aspect-square grow',
+  'max-w-10 min-w-4 max-h-10 min-h-4 text-xs lg:text-sm text-primary aspect-square grow',
 )
 
 const tileEmptyCN = 'bg-input'
@@ -135,13 +139,14 @@ export default function Minesweeper() {
     >
       <div
         className={cn(
-          'flex flex-col w-xl md:w-3xl lg:w-5xl gap-1 transition-all',
+          'flex flex-col  gap-1 transition-all',
+          difficultySettings[difficulty].wMax,
           difficultySettings[difficulty].gridCols,
           isGameOver ? 'opacity-50' : '',
         )}
       >
         {tiles.flatMap((r, i) => (
-          <div className="flex flex-row w-full gap-1">
+          <div className="flex flex-row w-full gap-1 justify-center">
             {r.map((t, idx) => {
               let className = tileBaseCN
               let content: ReactNode = <></>
