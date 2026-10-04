@@ -66,6 +66,10 @@ export interface PageOption {
   icon: LucideIcon
 }
 
+export interface GameOption extends PageOption {
+  scoreMeasure?: string
+}
+
 export interface InterfereProps {
   actions?: InterfereAction[]
   setNotifyTime: React.Dispatch<React.SetStateAction<Date>>

@@ -33,7 +33,7 @@ const tileBaseCN = cn(
 const tileEmptyCN = 'bg-input'
 
 export default function Snake() {
-  const { updateActivity, riceMessage } = useEmptyContext()
+  const { updateActivity, updateHighScore, riceMessage } = useEmptyContext()
   const {
     tiles,
     score,
@@ -51,6 +51,10 @@ export default function Snake() {
   } = useSnake()
 
   useInterfere(interfereProps)
+
+  useEffect(() => {
+    updateHighScore('snake', score)
+  }, [updateHighScore, score])
 
   const swipeHandler = useSwipeable({
     onSwipedLeft: () => !isGameOver && left(),

@@ -11,6 +11,7 @@ export const timeoutModifier = 1
 interface EmptyState {
   ignoreCount: number
   foundPages: string[]
+  highScores: Record<string, number>
 }
 
 export function useEmptyProvider({
@@ -46,8 +47,16 @@ export function useEmptyProvider({
     return []
   })
 
-  const [startTime, _] = useState<Date>(new Date())
-  console.log(foundPages)
+  const [highScores, setHighScores] = useState<Record<string, number>>(() => {
+    const localEmpty = localStorage.getItem('empty')
+    if (localEmpty) {
+      const state = JSON.parse(decrypt(localEmpty)) as EmptyState
+      return state.highScores
+    }
+    return {}
+  })
+
+  const [startTime] = useState<Date>(new Date())
 
   const updateLocal = (activity: Date) => {
     localStorage.setItem('last-activity', JSON.stringify(activity))
@@ -56,9 +65,9 @@ export function useEmptyProvider({
   useEffect(() => {
     localStorage.setItem(
       'empty',
-      encrypt(JSON.stringify({ ignoreCount, foundPages })),
+      encrypt(JSON.stringify({ ignoreCount, foundPages, highScores })),
     )
-  }, [ignoreCount, foundPages])
+  }, [ignoreCount, foundPages, highScores])
 
   const findPage = useCallback(
     (id: string) => {
@@ -136,11 +145,35 @@ export function useEmptyProvider({
     [setInterfereAllowed],
   )
 
+  const getHighScore = useCallback(
+    (id: string) => {
+      const prevScore = highScores[id]
+      return prevScore ? prevScore : 0
+    },
+    [highScores],
+  )
+
+  const updateHighScore = useCallback(
+    (id: string, score: number, min?: boolean) => {
+      if (
+        highScores[id] == undefined ||
+        (min ? highScores[id] > score : highScores[id] < score)
+      ) {
+        const newScores = { ...highScores }
+        newScores[id] = score
+        setHighScores(newScores)
+      }
+    },
+    [highScores],
+  )
+
   return {
     title,
     setTitle,
     lastActivity,
     updateActivity,
+    getHighScore,
+    updateHighScore,
     riceMessage,
     interfereAllowed,
     setInterfereAllowed: toggleInterference,

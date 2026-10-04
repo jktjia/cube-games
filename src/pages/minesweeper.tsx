@@ -64,7 +64,7 @@ const tileBaseCN = cn(
 const tileEmptyCN = 'bg-input'
 
 export default function Minesweeper() {
-  const { updateActivity, riceMessage } = useEmptyContext()
+  const { updateActivity, updateHighScore, riceMessage } = useEmptyContext()
   const [difficulty, setDifficulty] = useState<Difficulty>(Difficulty.EXPERT)
   const [hoverX, setHoverX] = useState<number>()
   const [hoverY, setHoverY] = useState<number>()
@@ -76,7 +76,9 @@ export default function Minesweeper() {
     flag,
     flagOrRevealNeighbors,
     isGameLost,
+    isGameWon,
     isGameOver,
+    startTime,
     restart,
     remaining,
     interfereProps,
@@ -85,6 +87,13 @@ export default function Minesweeper() {
   const [swapFlagReveal, setSwapFlagReveal] = useState<boolean>(false)
 
   useInterfere(interfereProps)
+
+  useEffect(() => {
+    if (isGameWon && difficulty == Difficulty.EXPERT) {
+      const gameTime = (new Date().getTime() - startTime.getTime()) / 1000
+      updateHighScore('mines', gameTime, true)
+    }
+  }, [isGameWon])
 
   const handleClick = (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>,

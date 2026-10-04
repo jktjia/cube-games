@@ -110,7 +110,7 @@ function BlockMatrix({
 }
 
 export default function Tetris() {
-  const { updateActivity, riceMessage } = useEmptyContext()
+  const { updateActivity, updateHighScore, riceMessage } = useEmptyContext()
   const {
     visibleTiles,
     held,
@@ -134,6 +134,10 @@ export default function Tetris() {
   } = useTetris(defaultSettings)
 
   useInterfere(interfereProps)
+
+  useEffect(() => {
+    updateHighScore('tetris', score)
+  }, [updateHighScore, score])
 
   const splitMessage = useMemo(
     () => (riceMessage ? riceMessage.toUpperCase().split('') : []),

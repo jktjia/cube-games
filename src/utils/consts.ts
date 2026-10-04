@@ -6,7 +6,7 @@ import {
   LineSquiggle,
   Settings,
 } from 'lucide-react'
-import type { PageOption } from '@/types'
+import type { GameOption, PageOption } from '@/types'
 import { Direction } from '@/types'
 import {
   MERGE_PATH,
@@ -24,15 +24,23 @@ export const moveDirs = {
   [Direction.RIGHT]: { x: 1, y: 0 },
 }
 
-export const gameOptions: PageOption[] = [
+export const gameOptions: GameOption[] = [
   { id: 'merge', name: '2048', href: '/' + MERGE_PATH, icon: Grid2X2 },
   {
     id: 'mines',
     name: 'Minesweeper',
     href: '/' + MINESWEEPER_PATH,
     icon: Bomb,
+    scoreMeasure: 'seconds',
   },
-  { id: 'snake', name: 'Snake', href: '/' + SNAKE_PATH, icon: LineSquiggle },
+  {
+    id: 'snake',
+    name: 'Snake',
+    href: '/' + SNAKE_PATH,
+    icon: LineSquiggle,
+    scoreMeasure: 'pellets',
+  },
+
   { id: 'tetris', name: 'Tetris', href: '/' + TETRIS_PATH, icon: Blocks },
 ]
 

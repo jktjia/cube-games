@@ -27,7 +27,7 @@ const tileBaseCN = cn(
 const tileEmptyCN = 'bg-input'
 
 export default function MergeGame() {
-  const { updateActivity } = useEmptyContext()
+  const { updateActivity, updateHighScore } = useEmptyContext()
   const {
     tiles,
     score,
@@ -45,6 +45,10 @@ export default function MergeGame() {
   const [paused, setPaused] = useState<boolean>(false)
 
   useInterfere(interfereProps)
+
+  useEffect(() => {
+    updateHighScore('merge', score)
+  }, [updateHighScore, score])
 
   const swipeHandler = useSwipeable({
     onSwipedLeft: () => !paused && startTransition(() => left()),

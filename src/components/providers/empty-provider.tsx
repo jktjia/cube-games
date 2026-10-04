@@ -8,6 +8,8 @@ interface EmptyContextType {
   setTitle: (s: string) => void
   lastActivity: Date
   updateActivity: () => void
+  getHighScore: (id: string) => number
+  updateHighScore: (id: string, score: number, min?: boolean) => void
   riceMessage?: string
   interfereAllowed: boolean
   setInterfereAllowed: (b: boolean) => void
@@ -21,6 +23,8 @@ const EmptyContext = createContext<EmptyContextType>({
   setTitle: console.log,
   lastActivity: new Date(),
   updateActivity: () => console.log(new Date()),
+  getHighScore: (_) => 0,
+  updateHighScore: console.log,
   interfereAllowed: false,
   setInterfereAllowed: console.log,
   ignoreCount: 0,
