@@ -2,16 +2,15 @@ import { StrictMode } from 'react'
 import ReactDOM from 'react-dom/client'
 import {
   RouterProvider,
+  createHashHistory,
   createRootRoute,
   createRoute,
   createRouter,
 } from '@tanstack/react-router'
-
 import './styles.css'
 import { Toaster } from 'sonner'
 import { HeadProvider } from 'react-head'
 import reportWebVitals from './reportWebVitals.ts'
-
 import BaseLayout from './layouts/base-layout.tsx'
 import MergeGame from './pages/merge-game.tsx'
 import Minesweeper from './pages/minesweeper.tsx'
@@ -110,6 +109,8 @@ const routeTree = rootRoute.addChildren([
   textRoute.addChildren([monitorRoute, stayRoute]),
 ])
 
+const hashHistory = createHashHistory()
+
 const router = createRouter({
   routeTree,
   context: {},
@@ -118,6 +119,7 @@ const router = createRouter({
   defaultStructuralSharing: true,
   defaultPreloadStaleTime: 0,
   basepath: 'empty-games',
+  history: hashHistory,
 })
 
 declare module '@tanstack/react-router' {
