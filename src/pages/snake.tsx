@@ -1,12 +1,14 @@
-import { useEffect, useMemo } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { useSwipeable } from 'react-swipeable'
 import { gradient } from '@/utils/colors'
 import { SnakeTileState } from '@/types'
 import useEmptyContext from '@/hooks/use-empty-context'
 import { cn } from '@/utils'
-import GameContent from '@/components/game-content'
+import { GameCard, GameContent, GameHeader } from '@/components/game-card'
 import useSnake from '@/hooks/use-snake'
 import { useInterfere } from '@/hooks/use-interfere'
+import { Button } from '@/components/ui/button'
+import HiddenCat from '@/components/hidden-cat'
 
 const tileColors = {
   [SnakeTileState.APPLE]: gradient[13],
@@ -31,7 +33,7 @@ const tileBaseCN = cn(
 const tileEmptyCN = 'bg-input'
 
 export default function Snake() {
-  const { updateActivity, riceMessage } = useEmptyContext()
+  const { updateActivity, updateHighScore, riceMessage } = useEmptyContext()
   const {
     tiles,
     score,
@@ -50,6 +52,10 @@ export default function Snake() {
 
   useInterfere(interfereProps)
 
+  useEffect(() => {
+    updateHighScore('snake', score)
+  }, [updateHighScore, score])
+
   const swipeHandler = useSwipeable({
     onSwipedLeft: () => !isGameOver && left(),
     onSwipedDown: () => !isGameOver && down(),
@@ -58,29 +64,33 @@ export default function Snake() {
     preventScrollOnSwipe: true,
   })
 
-  const handleKeyDown = (e: KeyboardEvent) => {
-    if (!isGameOver) {
-      if (e.key === 'ArrowUp' || e.key === 'w') {
+  const keyMap = useMemo(
+    () =>
+      new Map([
+        ['ArrowUp', up],
+        ['w', up],
+        ['ArrowDown', down],
+        ['s', down],
+        ['ArrowLeft', left],
+        ['a', left],
+        ['ArrowRight', right],
+        ['d', right],
+        ['Escape', togglePause],
+      ]),
+    [up, down, left, right, togglePause],
+  )
+
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      if (!isGameOver && keyMap.has(e.key)) {
         e.preventDefault()
-        up()
-      } else if (e.key === 'ArrowDown' || e.key === 's') {
-        e.preventDefault()
-        down()
-      } else if (e.key === 'ArrowLeft' || e.key === 'a') {
-        e.preventDefault()
-        left()
-      } else if (e.key === 'ArrowRight' || e.key === 'd') {
-        e.preventDefault()
-        right()
-      } else if (e.key === 'Escape') {
-        e.preventDefault()
-        togglePause()
+        const action = keyMap.get(e.key)
+        action && action()
+        updateActivity()
       }
-    } else {
-      restart()
-    }
-    updateActivity()
-  }
+    },
+    [isGameOver, keyMap, updateActivity],
+  )
 
   const splitMessage = useMemo(
     () => (riceMessage ? riceMessage.toUpperCase().split('') : []),
@@ -96,43 +106,51 @@ export default function Snake() {
   }, [handleKeyDown])
 
   return (
-    <GameContent
+    <GameCard
       gameOverMessage={isGameLost ? 'You Lost!' : 'You Won!'}
       isGameOver={isGameOver}
-      restart={restart}
-      setPaused={setPaused}
-      // gameName="Minesweeper"
-      controls={controls}
-      scoreText={`Score: ${score}`}
       announcement={paused ? 'Paused' : undefined}
     >
-      <div
-        className={cn(
-          'grid gap-1 transition-all w-2xl max-w-full grid-cols-20 ',
-        )}
-        {...swipeHandler}
+      <GameHeader
+        restart={restart}
+        setPaused={setPaused}
+        controls={controls}
+        scoreText={`Score: ${score}`}
       >
-        {tiles.flatMap((r, i) =>
-          r.map((t, idx) => {
-            let className = tileBaseCN
-            let content = ''
-            if (t != null && !paused) {
-              className = cn(className, tileColors[t])
-            } else {
-              className = cn(className, tileEmptyCN)
-              if (riceMessage) {
-                content =
-                  splitMessage[(i * r.length + idx) % splitMessage.length]
+        <Button onClick={togglePause} variant={'outline'} className="md:hidden">
+          {paused ? 'Unpause' : 'Pause'}
+        </Button>
+      </GameHeader>
+      <GameContent>
+        <HiddenCat n={3} className="absolute bottom-0 right-0" />
+        <div
+          className={cn(
+            'grid gap-1 transition-all w-2xl max-w-full grid-cols-20 ',
+          )}
+          {...swipeHandler}
+        >
+          {tiles.flatMap((r, i) =>
+            r.map((t, idx) => {
+              let className = tileBaseCN
+              let content = ''
+              if (t != null && !paused) {
+                className = cn(className, tileColors[t])
+              } else {
+                className = cn(className, tileEmptyCN)
+                if (riceMessage) {
+                  content =
+                    splitMessage[(i * r.length + idx) % splitMessage.length]
+                }
               }
-            }
-            return (
-              <div className={className} key={'tile-' + i + '-' + idx}>
-                {content}
-              </div>
-            )
-          }),
-        )}
-      </div>
-    </GameContent>
+              return (
+                <div className={className} key={'tile-' + i + '-' + idx}>
+                  {content}
+                </div>
+              )
+            }),
+          )}
+        </div>
+      </GameContent>
+    </GameCard>
   )
 }

@@ -11,6 +11,7 @@ interface MinesweeperState {
   width: number
   height: number
   mineCount: number
+  startTime: Date
 }
 
 export default function useMinesweeper(
@@ -37,6 +38,7 @@ export default function useMinesweeper(
       width,
       height,
       mineCount,
+      startTime: new Date(),
     }
   })
 
@@ -58,9 +60,10 @@ export default function useMinesweeper(
         width,
         height,
         mineCount,
+        startTime: new Date(),
       })
     }
-  })
+  }, [width, height])
 
   useEffect(() => {
     const strState = encrypt(JSON.stringify(gameState))
@@ -85,8 +88,9 @@ export default function useMinesweeper(
       width,
       height,
       mineCount,
+      startTime: new Date(),
     })
-  }, [setGameState])
+  }, [width, height, setGameState])
 
   const flag = useCallback(
     (x: number, y: number) => {
@@ -223,6 +227,7 @@ export default function useMinesweeper(
     isGameLost,
     isGameWon,
     isGameOver,
+    startTime: gameState.startTime,
     interfereProps,
   }
 }

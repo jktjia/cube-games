@@ -1,9 +1,17 @@
-import { Blocks, Bomb, Grid2X2, LineSquiggle, Settings } from 'lucide-react'
-import type { PageOption } from '@/types'
+import {
+  Blocks,
+  Bomb,
+  Eye,
+  Grid2X2,
+  LineSquiggle,
+  Settings,
+} from 'lucide-react'
+import type { GameOption, PageOption } from '@/types'
 import { Direction } from '@/types'
 import {
   MERGE_PATH,
   MINESWEEPER_PATH,
+  MONITOR_PATH,
   SETTINGS_PATH,
   SNAKE_PATH,
   TETRIS_PATH,
@@ -16,13 +24,37 @@ export const moveDirs = {
   [Direction.RIGHT]: { x: 1, y: 0 },
 }
 
-export const gameOptions: PageOption[] = [
-  { name: '2048', href: '/' + MERGE_PATH, icon: Grid2X2 },
-  { name: 'Minesweeper', href: '/' + MINESWEEPER_PATH, icon: Bomb },
-  { name: 'Snake', href: '/' + SNAKE_PATH, icon: LineSquiggle },
-  { name: 'Tetris', href: '/' + TETRIS_PATH, icon: Blocks },
+export const gameOptions: GameOption[] = [
+  { id: 'merge', name: '2048', href: '/' + MERGE_PATH, icon: Grid2X2 },
+  {
+    id: 'mines',
+    name: 'Minesweeper',
+    href: '/' + MINESWEEPER_PATH,
+    icon: Bomb,
+    scoreMeasure: 'seconds',
+  },
+  {
+    id: 'snake',
+    name: 'Snake',
+    href: '/' + SNAKE_PATH,
+    icon: LineSquiggle,
+    scoreMeasure: 'pellets',
+  },
+
+  { id: 'tetris', name: 'Tetris', href: '/' + TETRIS_PATH, icon: Blocks },
+]
+
+export const hiddenPages: PageOption[] = [
+  { id: 'stats', name: 'Statistics', href: '/' + MONITOR_PATH, icon: Eye },
 ]
 
 export const footerLinks: PageOption[] = [
-  { name: 'Settings', href: '/' + SETTINGS_PATH, icon: Settings },
+  {
+    id: 'settings',
+    name: 'Settings',
+    href: '/' + SETTINGS_PATH,
+    icon: Settings,
+  },
 ]
+
+export const CAT_COUNT = 5

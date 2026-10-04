@@ -60,9 +60,14 @@ export interface Coord {
 export type SnakeSpace = SnakeTileState | null
 
 export interface PageOption {
+  id: string
   name: string
   href: string
   icon: LucideIcon
+}
+
+export interface GameOption extends PageOption {
+  scoreMeasure?: string
 }
 
 export interface InterfereProps {

@@ -15,13 +15,12 @@ import reportWebVitals from './reportWebVitals.ts'
 import BaseLayout from './layouts/base-layout.tsx'
 import MergeGame from './pages/merge-game.tsx'
 import Minesweeper from './pages/minesweeper.tsx'
-// import FeedMe from './pages/feed-me.tsx'
 import TextLayout from './layouts/secret-layout.tsx'
 import {
   DONT_LEAVE_PATH,
   MERGE_PATH,
-  // FEED_ME_PATH,
   MINESWEEPER_PATH,
+  MONITOR_PATH,
   SETTINGS_PATH,
   SNAKE_PATH,
   TETRIS_PATH,
@@ -33,6 +32,7 @@ import Settings from './pages/settings.tsx'
 import Snake from './pages/snake.tsx'
 import Home from './pages/home.tsx'
 import { ThemeProvider } from './components/providers/theme-provider.tsx'
+import MonitorEmpty from './pages/monitor-empty.tsx'
 
 const rootRoute = createRootRoute({
   component: BaseLayout,
@@ -86,11 +86,11 @@ const settingsRoute = createRoute({
   component: Settings,
 })
 
-// const feedRoute = createRoute({
-//   getParentRoute: () => textRoute,
-//   path: FEED_ME_PATH,
-//   component: FeedMe,
-// })
+const monitorRoute = createRoute({
+  getParentRoute: () => textRoute,
+  path: MONITOR_PATH,
+  component: MonitorEmpty,
+})
 
 const stayRoute = createRoute({
   getParentRoute: () => textRoute,
@@ -106,10 +106,8 @@ const routeTree = rootRoute.addChildren([
     mineRoute,
     tetrisRoute,
     snakeRoute,
-    // gameRoute.addChildren([mergeRoute, mineRoute, tetrisRoute, snakeRoute]),
   ]),
-  // textRoute.addChildren([feedRoute, stayRoute]),
-  textRoute.addChildren([stayRoute]),
+  textRoute.addChildren([monitorRoute, stayRoute]),
 ])
 
 const router = createRouter({
@@ -136,7 +134,7 @@ if (rootElement && !rootElement.innerHTML) {
       <HeadProvider>
         <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
           <RouterProvider router={router} />
-          <Toaster position="top-right" richColors />
+          <Toaster position="top-right" richColors closeButton />
         </ThemeProvider>
       </HeadProvider>
     </StrictMode>,
