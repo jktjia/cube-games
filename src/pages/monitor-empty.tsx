@@ -1,5 +1,5 @@
 import { Cat, MessageSquareX } from 'lucide-react'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import {
   Item,
   ItemContent,
@@ -9,24 +9,25 @@ import {
 } from '@/components/ui/item'
 import { Separator } from '@/components/ui/separator'
 import { useCats } from '@/hooks/use-cats'
-import useEmptyContext from '@/hooks/use-empty-context'
+import useEmptyContext, { timeoutModifier } from '@/hooks/use-empty-context'
 import { CAT_COUNT, gameOptions } from '@/utils'
 
 export default function MonitorEmpty() {
   const { ignoreCount, findPage, lastActivity, getHighScore } =
     useEmptyContext()
   const { catsRemaining } = useCats()
+  const [time] = useState(new Date())
 
   useEffect(() => {
     findPage('stats')
   }, [])
 
   return (
-    <div className="max-w-screen w-2xl flex flex-col items-start gap-5 h-full p-2">
+    <div className="w-full flex flex-col items-start gap-4 h-full">
       <h1 className="text-2xl font-bold">Statistics</h1>
       <Separator />
       <h2 className="text-xl font-bold">High Scores</h2>
-      <div className="grid w-full gap-2 md:grid-cols-2">
+      <div className="grid w-full gap-4 md:grid-cols-2">
         {gameOptions.map((g) => (
           <Item key={g.id} variant={'outline'}>
             <ItemMedia variant="icon">
@@ -43,18 +44,25 @@ export default function MonitorEmpty() {
         ))}
       </div>
       <Separator />
-      <Item>
+      <h2 className="text-xl font-bold">Other</h2>
+      <Item variant={'outline'} className="w-full text-start">
         <ItemMedia variant="icon">
           <MessageSquareX />
         </ItemMedia>
         <ItemContent>
           <ItemTitle>{`Last activity: ${lastActivity.toLocaleString('en-US')}`}</ItemTitle>
           <ItemDescription>
-            something something you use this website
+            {time.getTime() - lastActivity.getTime() <
+            5 * 60 * 1000 * timeoutModifier
+              ? 'Get a life'
+              : time.getTime() - lastActivity.getTime() >
+                  30 * 60 * 1000 * timeoutModifier
+                ? 'She misses you'
+                : '...'}
           </ItemDescription>
         </ItemContent>
       </Item>
-      <Item>
+      <Item variant={'outline'} className="w-full text-start">
         <ItemMedia variant="icon">
           <MessageSquareX />
         </ItemMedia>
@@ -67,7 +75,7 @@ export default function MonitorEmpty() {
           </ItemDescription>
         </ItemContent>
       </Item>
-      <Item>
+      <Item variant={'outline'} className="w-full text-start">
         <ItemMedia variant="icon">
           <Cat />
         </ItemMedia>
