@@ -45,7 +45,13 @@ export const gameOptions: GameOption[] = [
 ]
 
 export const hiddenPages: PageOption[] = [
-  { id: 'stats', name: 'Statistics', href: '/' + MONITOR_PATH, icon: Eye },
+  {
+    id: 'stats',
+    name: 'Statistics',
+    altName: 'Monitoring',
+    href: '/' + MONITOR_PATH,
+    icon: Eye,
+  },
 ]
 
 export const footerLinks: PageOption[] = [
