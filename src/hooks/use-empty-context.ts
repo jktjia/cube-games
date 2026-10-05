@@ -19,13 +19,12 @@ export function useEmptyProvider({
 }: {
   navigate: UseNavigateResult<string>
 }) {
-  const [title, setTitle] = useState<string>('Cube Games')
+  const [showEmpty, setShowEmpty] = useState<boolean>(false)
   const [lastActivity, setLastActivity] = useState<Date>(() => {
     const localTime = localStorage.getItem('last-activity')
     return localTime ? new Date(JSON.parse(localTime)) : new Date()
   })
 
-  const [showMessage, setShowMessage] = useState<boolean>(false)
   const [pokes, setPokes] = useState<number>(0)
 
   const [interfereAllowed, setInterfereAllowed] = useState<boolean>(true)
@@ -88,13 +87,11 @@ export function useEmptyProvider({
     const now = new Date()
     const startDiff = now.valueOf() - startTime.valueOf()
     if (startDiff > 10 * 60 * 1000 * timeoutModifier) {
-      setShowMessage(true)
-      setTitle('Empty Games')
+      setShowEmpty(true)
 
       setTimeout(
         () => {
-          setShowMessage(false)
-          setTitle('Cube Games')
+          setShowEmpty(true)
         },
         5 * 1000 * timeoutModifier,
       )
@@ -104,7 +101,7 @@ export function useEmptyProvider({
       2 * 60 * 1000 * timeoutModifier,
     )
     return () => clearTimeout(timeout)
-  }, [startTime, setShowMessage, setTitle, pokes])
+  }, [startTime, setShowEmpty, pokes])
 
   useEffect(() => {
     const startDiff = startTime.valueOf() - lastActivity.valueOf()
@@ -115,10 +112,10 @@ export function useEmptyProvider({
 
   const riceMessage = useMemo(
     () =>
-      showMessage
+      showEmpty
         ? boredMessages[Math.floor(Math.random() * boredMessages.length)]
         : undefined,
-    [showMessage],
+    [showEmpty],
   )
 
   const toggleInterference = useCallback(
@@ -167,9 +164,14 @@ export function useEmptyProvider({
     [highScores],
   )
 
+  const title = useMemo(
+    () => (showEmpty ? 'Empty Games' : 'Cube Games'),
+    [showEmpty],
+  )
+
   return {
     title,
-    setTitle,
+    showEmpty,
     lastActivity,
     updateActivity,
     getHighScore,

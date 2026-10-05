@@ -58,7 +58,7 @@ F2: Start a new game`
 
 const tileBaseCN = cn(
   'rounded-none flex items-center justify-center overflow-visible',
-  'max-w-10 min-w-4 max-h-10 min-h-4 text-xs lg:text-sm text-primary aspect-square grow',
+  'max-w-10 min-w-6 max-h-10 min-h-6 text-xs lg:text-sm text-primary aspect-square grow',
 )
 
 const tileEmptyCN = 'bg-input'
