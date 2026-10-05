@@ -234,6 +234,7 @@ test('move left', () => {
     height,
     score: 42,
     rows: 72,
+    combo: 0,
   })
 
   const tiles = [
@@ -329,6 +330,7 @@ test('move left', () => {
     height,
     score: 42,
     rows: 72,
+    combo: 0,
   })
 
   const tiles = [
@@ -401,6 +403,7 @@ test('hold no existing hold', () => {
     height,
     score: 0,
     rows: 0,
+    combo: 0,
   })
 
   const tiles = [
@@ -458,6 +461,7 @@ test('hold with existing hold', () => {
     height,
     score: 0,
     rows: 0,
+    combo: 0,
   })
 
   const tiles = [
@@ -586,6 +590,7 @@ test('rotate impossible', () => {
     height,
     score: 0,
     rows: 100,
+    combo: 0,
   })
 
   const tiles = [
@@ -726,6 +731,7 @@ test('rotate i off-center', async () => {
     height,
     score: 0,
     rows: 90,
+    combo: 0,
   })
 
   const tiles = [
@@ -809,6 +815,7 @@ test('rotate t', () => {
     height,
     score: 0,
     rows: 90,
+    combo: 0,
   })
 
   const tiles = [
@@ -893,6 +900,7 @@ test('t-spin single', async () => {
     height,
     score: 0,
     rows: 90,
+    combo: 0,
   })
 
   const tiles = [
@@ -1052,6 +1060,7 @@ test('t-spin double off-center', async () => {
     height,
     score: 0,
     rows: 91,
+    combo: 0,
   })
 
   const tiles = [
@@ -1165,8 +1174,8 @@ test('t-spin double off-center', async () => {
   expect(result.current.visibleTiles[6]).toStrictEqual(tiles[2])
   expect(result.current.visibleTiles[7]).toStrictEqual(tiles[3])
   expect(result.current.visibleTiles[8]).toStrictEqual(tiles[4])
-  expect(result.current.score).toEqual(1200 * 10 + 800 * 10 * 1.5)
-  expect(result.current.annoucement).toEqual('Tetris')
+  expect(result.current.score).toEqual(10 * 50 * 2 + 1200 * 10 + 800 * 10 * 1.5)
+  expect(result.current.annoucement).toEqual('Tetris\nCombo x2')
 })
 
 test('mini t-spin single', async () => {
@@ -1212,6 +1221,7 @@ test('mini t-spin single', async () => {
     height,
     score: 0,
     rows: 98,
+    combo: 0,
   })
 
   const tiles = [
@@ -1269,6 +1279,7 @@ test('hard down', () => {
     height,
     score: 0,
     rows: 99,
+    combo: 0,
   })
 
   const tiles = [
@@ -1344,6 +1355,7 @@ test('soft down', async () => {
     height,
     score: 0,
     rows: 78,
+    combo: 0,
   })
 
   const tiles = [
@@ -1432,6 +1444,7 @@ test('restart', () => {
       height,
       score: 0,
       rows: 0,
+      combo: 0,
     })
     .mockReturnValueOnce({
       tiles: [
@@ -1473,6 +1486,7 @@ test('restart', () => {
       height,
       score: 28,
       rows: 99,
+      combo: 0,
     })
 
   const tiles = [
