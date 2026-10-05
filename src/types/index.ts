@@ -36,6 +36,7 @@ export interface TetrisState {
   height: number
   score: number
   rows: number
+  combo: number
 }
 
 export interface InterfereAction {

@@ -1,4 +1,4 @@
-# Empty Games
+# Cube Games
 
 This is has a few simple games so I can mess around.
 

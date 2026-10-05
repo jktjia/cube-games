@@ -25,8 +25,10 @@ export function GameCard({
     <Card className="bg-card/50 backdrop-blur-sm border-muted max-w-full max-h-full flex flex-col justify-center">
       {children}
       {(isGameOver || announcement) && (
-        <div className="self-center text-3xl font-semibold absolute w-max h-max bg-background/70 rounded p-2">
-          {isGameOver ? gameOverMessage : announcement}
+        <div className="self-center text-2xl font-semibold absolute w-max h-max bg-background/70 rounded p-2">
+          {isGameOver
+            ? gameOverMessage
+            : announcement?.split('\n').map((a) => <p>{a}</p>)}
         </div>
       )}
     </Card>
