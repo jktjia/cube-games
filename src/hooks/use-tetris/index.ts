@@ -74,7 +74,6 @@ export default function useTetris(
   useEffect(() => {
     const strState = encrypt(JSON.stringify(gameState))
     localStorage.setItem('tetris', strState)
-    console.log(gameState.combo)
   }, [gameState])
 
   useEffect(() => {
@@ -202,7 +201,7 @@ export default function useTetris(
     (state: TetrisState, rowsCleared: number) => {
       const score =
         state.score +
-        level * 50 * (state.combo + 1) +
+        level * 50 * (state.combo > 0 ? state.combo + 1 : 0) +
         level *
           (didTSpin
             ? scoreTSpinRows[rowsCleared] *
