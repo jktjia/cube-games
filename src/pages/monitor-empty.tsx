@@ -1,6 +1,7 @@
 import { ArrowLeft, Cat, MessageSquareX } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useCanGoBack, useRouter } from '@tanstack/react-router'
+import { Title } from 'react-head'
 import {
   Item,
   ItemContent,
@@ -17,8 +18,14 @@ import { Button } from '@/components/ui/button'
 export default function MonitorEmpty() {
   const router = useRouter()
   const canGoBack = useCanGoBack()
-  const { ignoreCount, findPage, lastActivity, getHighScore } =
-    useEmptyContext()
+  const {
+    title,
+    showEmpty,
+    ignoreCount,
+    findPage,
+    lastActivity,
+    getHighScore,
+  } = useEmptyContext()
   const { catsRemaining } = useCats()
   const [time] = useState(new Date())
 
@@ -28,6 +35,7 @@ export default function MonitorEmpty() {
 
   return (
     <>
+      <Title>{`${title} | ${showEmpty ? 'Monitoring' : 'Statistics'}`}</Title>
       <Button
         variant={'ghost'}
         size={'icon'}
@@ -39,7 +47,9 @@ export default function MonitorEmpty() {
         <ArrowLeft />
       </Button>
       <div className="w-full flex flex-col items-start gap-4 h-full">
-        <h1 className="text-2xl font-bold">Statistics</h1>
+        <h1 className="text-2xl font-bold">
+          {showEmpty ? 'Monitoring' : 'Statistics'}
+        </h1>
         <Separator />
         <h2 className="text-xl font-bold">High Scores</h2>
         <div className="grid w-full gap-4 md:grid-cols-2">

@@ -1,5 +1,6 @@
 import { useNavigate } from '@tanstack/react-router'
 import { useEffect, useRef } from 'react'
+import { Title } from 'react-head'
 import { Button } from '@/components/ui/button'
 import { useStay } from '@/hooks/use-stay'
 import { stayBtnText, stayResponseText } from '@/utils/messages'
@@ -15,25 +16,28 @@ export default function Stay() {
   }, [apologies])
 
   return (
-    <div className="flex flex-col pb-24">
-      <div className="pb-8 text-5xl text-red-500 ">
-        {btnPresses == 0
-          ? apologies.split('\n').map((a, idx) => <p key={idx}>{a}</p>)
-          : stayResponseText[btnPresses - 1]}
+    <>
+      <Title>Please don't leave me</Title>
+      <div className="flex flex-col pb-24">
+        <div className="pb-8 text-5xl text-red-500 ">
+          {btnPresses == 0
+            ? apologies.split('\n').map((a, idx) => <p key={idx}>{a}</p>)
+            : stayResponseText[btnPresses - 1]}
+        </div>
+        <Button
+          ref={bottomRef}
+          onClick={() => {
+            if (btnPresses < stayBtnText.length - 1) {
+              setBtnPresses(btnPresses + 1)
+            } else {
+              navigate({ to: '/' })
+            }
+          }}
+          variant={'secondary'}
+        >
+          {stayBtnText[btnPresses]}
+        </Button>
       </div>
-      <Button
-        ref={bottomRef}
-        onClick={() => {
-          if (btnPresses < stayBtnText.length - 1) {
-            setBtnPresses(btnPresses + 1)
-          } else {
-            navigate({ to: '/' })
-          }
-        }}
-        variant={'secondary'}
-      >
-        {stayBtnText[btnPresses]}
-      </Button>
-    </div>
+    </>
   )
 }

@@ -5,7 +5,7 @@ import { useEmptyProvider } from '@/hooks/use-empty-context'
 
 interface EmptyContextType {
   title: string
-  setTitle: (s: string) => void
+  showEmpty: boolean
   lastActivity: Date
   updateActivity: () => void
   getHighScore: (id: string) => number
@@ -20,7 +20,7 @@ interface EmptyContextType {
 
 const EmptyContext = createContext<EmptyContextType>({
   title: '',
-  setTitle: console.log,
+  showEmpty: false,
   lastActivity: new Date(),
   updateActivity: () => console.log(new Date()),
   getHighScore: (_) => 0,
