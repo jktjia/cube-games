@@ -33,6 +33,7 @@ export function initState(width: number, height: number): TetrisState {
     height,
     score: 0,
     rows: 0,
+    combo: 0,
   }
 }
 

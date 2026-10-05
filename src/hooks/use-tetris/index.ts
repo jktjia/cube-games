@@ -74,6 +74,7 @@ export default function useTetris(
   useEffect(() => {
     const strState = encrypt(JSON.stringify(gameState))
     localStorage.setItem('tetris', strState)
+    console.log(gameState.combo)
   }, [gameState])
 
   useEffect(() => {
@@ -201,6 +202,7 @@ export default function useTetris(
     (state: TetrisState, rowsCleared: number) => {
       const score =
         state.score +
+        level * 50 * (state.combo + 1) +
         level *
           (didTSpin
             ? scoreTSpinRows[rowsCleared] *
@@ -218,7 +220,8 @@ export default function useTetris(
       if (rowsCleared > 0) {
         setAnnouncement(
           (didTSpin ? 'T-Spin ' : miniTSpin ? 'Mini T-Spin ' : '') +
-            labelRowsCleared[rowsCleared],
+            labelRowsCleared[rowsCleared] +
+            (state.combo > 0 ? `\nCombo x${state.combo + 1}` : ''),
         )
       }
       setDidTSpin(false)
@@ -240,6 +243,7 @@ export default function useTetris(
         tiles: updated.tiles,
         score: scorePlacement(state, updated.rowsCleared),
         rows: state.rows + updated.rowsCleared,
+        combo: updated.rowsCleared > 0 ? state.combo + 1 : 0,
       })
     },
     [newBlock, scorePlacement],
@@ -275,6 +279,7 @@ export default function useTetris(
         score:
           2 * (newY - state.y) + scorePlacement(state, updated.rowsCleared),
         rows: state.rows + updated.rowsCleared,
+        combo: updated.rowsCleared > 0 ? state.combo + 1 : 0,
       })
     },
     [newBlock, scorePlacement],
