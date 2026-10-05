@@ -20,5 +20,5 @@ export default defineConfig({
       '@': resolve(import.meta.dirname, './src'),
     },
   },
-  base: 'https://jktjia.github.io/empty-games',
+  base: 'https://jktjia.github.io/cube-games',
 })
