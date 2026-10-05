@@ -17,7 +17,7 @@ import {
   SNAKE_PATH,
   TETRIS_PATH,
 } from '@/utils/paths'
-// import { useTheme } from 'next-themes'
+import { useTheme } from '@/components/providers/theme-provider'
 
 const gamePaths = [
   '/' + MERGE_PATH,
@@ -59,7 +59,7 @@ export function useInterfere({ actions, setNotifyTime }: InterfereProps) {
   const [abandonedIdx, setAbandonedIdx] = useState<number>(0)
 
   const { interfereAllowed, lastActivity } = useEmptyContext()
-  // const { theme, setTheme } = useTheme()
+  const { theme, setTheme } = useTheme()
   const navigate = useNavigate()
   const location = useLocation()
 
@@ -116,20 +116,15 @@ export function useInterfere({ actions, setNotifyTime }: InterfereProps) {
         variant: ToastVariant.BASE,
       },
     },
-    // {
-    //   actionPossible:
-    //     useMemo(() => theme == 'light', [theme]),
-    //   action: useCallback(
-    //     () =>
-    //       setTheme('dark'),
-    //     [setTheme],
-    //   ),
-    //   afterToast: {
-    //     message: 'Set theme to dark',
-    //     desc: 'Light mode sucks',
-    //     variant: ToastVariant.INFO,
-    //   },
-    // },
+    {
+      actionPossible: useMemo(() => theme == 'light', [theme]),
+      action: useCallback(() => setTheme('dark'), [setTheme]),
+      afterToast: {
+        message: 'Set theme to dark',
+        desc: 'Light mode sucks',
+        variant: ToastVariant.INFO,
+      },
+    },
   ]
 
   const allActions = actions ? baseActions.concat(...actions) : baseActions
