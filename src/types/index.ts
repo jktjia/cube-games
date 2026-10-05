@@ -62,6 +62,7 @@ export type SnakeSpace = SnakeTileState | null
 export interface PageOption {
   id: string
   name: string
+  altName?: string
   href: string
   icon: LucideIcon
 }

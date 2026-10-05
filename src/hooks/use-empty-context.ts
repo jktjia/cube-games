@@ -91,7 +91,7 @@ export function useEmptyProvider({
 
       setTimeout(
         () => {
-          setShowEmpty(true)
+          setShowEmpty(false)
         },
         5 * 1000 * timeoutModifier,
       )

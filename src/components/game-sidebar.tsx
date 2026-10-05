@@ -28,6 +28,7 @@ function PageLink({
   size?: 'default' | 'sm' | 'lg' | null
   className?: string
 }) {
+  const { showEmpty } = useEmptyContext()
   const { toggleSidebar } = useSidebar()
 
   return (
@@ -39,7 +40,7 @@ function PageLink({
         className={cn('flex flex-row gap-2 items-center w-full', className)}
       >
         <page.icon size={20} />
-        {page.name}
+        {showEmpty && page.altName ? page.altName : page.name}
       </SidebarMenuButton>
     </Link>
   )
