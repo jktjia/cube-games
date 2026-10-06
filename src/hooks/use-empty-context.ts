@@ -2,7 +2,7 @@ import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { toast } from 'sonner'
 import type { UseNavigateResult } from '@tanstack/react-router'
 import { EmptyContext } from '@/components/providers/empty-provider'
-import { boredMessages } from '@/utils/messages'
+import { boredMessages, rejectedMessages } from '@/utils/messages'
 import { DONT_LEAVE_PATH } from '@/utils/paths'
 import { decrypt, encrypt } from '@/utils'
 
@@ -112,10 +112,12 @@ export function useEmptyProvider({
 
   const riceMessage = useMemo(
     () =>
+      // ignoreCount == 15
+      //   ? 'What did you do?'
       showEmpty
         ? boredMessages[Math.floor(Math.random() * boredMessages.length)]
         : undefined,
-    [showEmpty],
+    [ignoreCount, showEmpty],
   )
 
   const toggleInterference = useCallback(
@@ -123,14 +125,22 @@ export function useEmptyProvider({
       if (b) {
         setInterfereAllowed(true)
       } else {
-        setInterfereAllowed(false)
-        setIgnoreCount((i) => i + 1)
         setTimeout(
           () => {
             setInterfereAllowed(true)
-            toast.info('I lived, bitch', {
-              description: "Thought you'd seen the last of me, didn't you?",
-            })
+            const rejectedIdx = Math.min(
+              ignoreCount,
+              rejectedMessages.length - 1,
+            )
+            if (rejectedMessages[rejectedIdx].title) {
+              toast.message(rejectedMessages[rejectedIdx].title, {
+                description: rejectedMessages[rejectedIdx].desc,
+              })
+            } else {
+              toast.info(`Notifications restored`, {
+                description: rejectedMessages[rejectedIdx].desc,
+              })
+            }
           },
           60 *
             1000 *
@@ -138,8 +148,11 @@ export function useEmptyProvider({
             (10 - Math.min(ignoreCount, 10) + Math.ceil(Math.random() * 5)),
         )
       }
+      setIgnoreCount((i) => i + 1)
+
+      setInterfereAllowed(false)
     },
-    [setInterfereAllowed],
+    [setInterfereAllowed, ignoreCount],
   )
 
   const getHighScore = useCallback(

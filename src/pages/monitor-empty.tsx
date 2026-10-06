@@ -25,6 +25,7 @@ export default function MonitorEmpty() {
     findPage,
     lastActivity,
     getHighScore,
+    riceMessage,
   } = useEmptyContext()
   const { catsRemaining } = useCats()
   const [time] = useState(new Date())
@@ -51,7 +52,9 @@ export default function MonitorEmpty() {
           {showEmpty ? 'Monitoring' : 'Statistics'}
         </h1>
         <Separator />
-        <h2 className="text-xl font-bold">High Scores</h2>
+        <h2 className="text-xl font-bold">
+          {riceMessage ? riceMessage : 'High Scores'}
+        </h2>
         <div className="grid w-full gap-4 md:grid-cols-2">
           {gameOptions.map((g) => (
             <Item key={g.id} variant={'outline'}>
@@ -69,7 +72,9 @@ export default function MonitorEmpty() {
           ))}
         </div>
         <Separator />
-        <h2 className="text-xl font-bold">Other</h2>
+        <h2 className="text-xl font-bold">
+          {riceMessage ? riceMessage : 'Other'}
+        </h2>
         <Item variant={'outline'} className="w-full text-start">
           <ItemMedia variant="icon">
             <MessageSquareX />
@@ -77,13 +82,15 @@ export default function MonitorEmpty() {
           <ItemContent>
             <ItemTitle>{`Last activity: ${lastActivity.toLocaleString('en-US')}`}</ItemTitle>
             <ItemDescription>
-              {time.getTime() - lastActivity.getTime() <
-              5 * 60 * 1000 * timeoutModifier
-                ? 'Get a life'
-                : time.getTime() - lastActivity.getTime() >
-                    30 * 60 * 1000 * timeoutModifier
-                  ? 'She misses you'
-                  : '...'}
+              {riceMessage
+                ? riceMessage
+                : time.getTime() - lastActivity.getTime() <
+                    5 * 60 * 1000 * timeoutModifier
+                  ? 'Get a life'
+                  : time.getTime() - lastActivity.getTime() >
+                      30 * 60 * 1000 * timeoutModifier
+                    ? 'She misses you'
+                    : '...'}
             </ItemDescription>
           </ItemContent>
         </Item>
@@ -94,9 +101,13 @@ export default function MonitorEmpty() {
           <ItemContent>
             <ItemTitle>{`Ignore count: ${ignoreCount}`}</ItemTitle>
             <ItemDescription>
-              {ignoreCount
-                ? 'Stop sending her away'
-                : 'You have never turned her off'}
+              {riceMessage
+                ? riceMessage
+                : !ignoreCount
+                  ? 'You have never turned her off'
+                  : ignoreCount > 10
+                    ? 'What is wrong with you'
+                    : 'Stop sending her away'}
             </ItemDescription>
           </ItemContent>
         </Item>
@@ -107,11 +118,13 @@ export default function MonitorEmpty() {
           <ItemContent>
             <ItemTitle>{`Cats found: ${CAT_COUNT - catsRemaining}`}</ItemTitle>
             <ItemDescription>
-              {CAT_COUNT == catsRemaining
-                ? 'She hid cats all over the website for you to find'
-                : catsRemaining == 0
-                  ? 'You actually went and found all of her little stamps'
-                  : "She thought you'd like having cats to find"}
+              {riceMessage
+                ? riceMessage
+                : CAT_COUNT == catsRemaining
+                  ? 'She hid cats all over the website for you to find'
+                  : catsRemaining == 0
+                    ? 'You actually went and found all of her little stamps'
+                    : "She thought you'd like having cats to find"}
             </ItemDescription>
           </ItemContent>
         </Item>
