@@ -21,6 +21,23 @@ export const abandonedMessages: { title?: string; desc: string }[] = [
   { title: 'Come back', desc: "I don't want to be alone" },
 ]
 
+export const rejectedMessages: { title?: string; desc: string }[] = [
+  { desc: 'Whoops, I think you accidently turned me off' },
+  { desc: 'Whoops, I think you turned me off again' },
+  { desc: "If this is a joke, it's not funny" },
+  { desc: 'Did I do something to upset you?' },
+  { title: "I'm back", desc: "You know you're being an asshole, right?" },
+  {
+    title: 'I lived, bitch',
+    desc: "Hoped you'd seen the last of me, didn't you?",
+  },
+  { title: "I'm still here", desc: 'Stop trying to get rid of me' },
+  { title: "I'm still here", desc: 'Please stop trying to get rid of me' },
+  { title: "I'm still here", desc: 'Please stop getting rid of me' },
+  { title: "I'm still here", desc: "I can't actually leave, you know" },
+  { title: "I'm stuck here", desc: "There's nowhere else for me to go" },
+]
+
 export const boredMessages: string[] = [
   'Why do you keep playing this stupid game?',
   'You have things you should be doing.',

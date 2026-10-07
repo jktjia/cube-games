@@ -1,14 +1,25 @@
 import { Link } from '@tanstack/react-router'
+import type { InterfereAction } from '@/types'
 import { Card } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import useEmptyContext from '@/hooks/use-empty-context'
 import { gameOptions } from '@/utils'
 import { useInterfere } from '@/hooks/use-interfere'
 import HiddenCat from '@/components/hidden-cat'
+import { ToastVariant } from '@/types'
 
 export default function Home() {
-  const { title } = useEmptyContext()
-  useInterfere({ setNotifyTime: console.log })
+  const { title, getHighScore } = useEmptyContext()
+  const actions: InterfereAction[] = gameOptions.map((g) => ({
+    actionPossible: true,
+    afterToast: {
+      message: `${g.name} high score: ${getHighScore(g.id) + (g.scoreMeasure ? ' ' + g.scoreMeasure : '')}`,
+      desc: 'Check your high scores on at /statistics',
+      variant: ToastVariant.INFO,
+    },
+  }))
+
+  useInterfere({ setNotifyTime: console.log, actions })
 
   return (
     <div className="flex flex-col justify-center items-start gap-5 h-full p-2 w-full lg:w-2xl">
