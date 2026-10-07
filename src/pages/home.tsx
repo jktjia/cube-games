@@ -1,12 +1,12 @@
 import { Link } from '@tanstack/react-router'
-import type {InterfereAction} from '@/types';
+import type { InterfereAction } from '@/types'
 import { Card } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import useEmptyContext from '@/hooks/use-empty-context'
 import { gameOptions } from '@/utils'
 import { useInterfere } from '@/hooks/use-interfere'
 import HiddenCat from '@/components/hidden-cat'
-import {  ToastVariant } from '@/types'
+import { ToastVariant } from '@/types'
 
 export default function Home() {
   const { title, getHighScore } = useEmptyContext()

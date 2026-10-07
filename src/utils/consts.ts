@@ -3,12 +3,14 @@ import {
   Bomb,
   Eye,
   Grid2X2,
+  Info,
   LineSquiggle,
   Settings,
 } from 'lucide-react'
 import type { GameOption, PageOption } from '@/types'
 import { Direction } from '@/types'
 import {
+  ABOUT_PATH,
   MERGE_PATH,
   MINESWEEPER_PATH,
   MONITOR_PATH,
@@ -45,6 +47,13 @@ export const gameOptions: GameOption[] = [
 ]
 
 export const hiddenPages: PageOption[] = [
+  {
+    id: 'about',
+    name: 'About',
+    // altName: 'Monitoring',
+    href: '/' + ABOUT_PATH,
+    icon: Info,
+  },
   {
     id: 'stats',
     name: 'Statistics',

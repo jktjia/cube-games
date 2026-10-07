@@ -1,6 +1,5 @@
-import { ArrowLeft, Cat, MessageSquareX } from 'lucide-react'
+import { Cat, MessageSquareX } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import { useCanGoBack, useRouter } from '@tanstack/react-router'
 import { Title } from 'react-head'
 import {
   Item,
@@ -13,11 +12,8 @@ import { Separator } from '@/components/ui/separator'
 import { useCats } from '@/hooks/use-cats'
 import useEmptyContext, { timeoutModifier } from '@/hooks/use-empty-context'
 import { CAT_COUNT, gameOptions } from '@/utils'
-import { Button } from '@/components/ui/button'
 
 export default function MonitorEmpty() {
-  const router = useRouter()
-  const canGoBack = useCanGoBack()
   const {
     title,
     showEmpty,
@@ -37,16 +33,6 @@ export default function MonitorEmpty() {
   return (
     <>
       <Title>{`${title} | ${showEmpty ? 'Monitoring' : 'Statistics'}`}</Title>
-      <Button
-        variant={'ghost'}
-        size={'icon'}
-        onClick={() =>
-          canGoBack ? router.history.back() : router.navigate({ to: '/' })
-        }
-        className="m-2 md:fixed z-10 left-0 top-0"
-      >
-        <ArrowLeft />
-      </Button>
       <div className="w-full flex flex-col items-start gap-4 h-full">
         <h1 className="text-2xl font-bold">
           {showEmpty ? 'Monitoring' : 'Statistics'}

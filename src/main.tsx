@@ -16,6 +16,7 @@ import MergeGame from './pages/merge-game.tsx'
 import Minesweeper from './pages/minesweeper.tsx'
 import TextLayout from './layouts/secret-layout.tsx'
 import {
+  ABOUT_PATH,
   DONT_LEAVE_PATH,
   MERGE_PATH,
   MINESWEEPER_PATH,
@@ -32,6 +33,8 @@ import Snake from './pages/snake.tsx'
 import Home from './pages/home.tsx'
 import { ThemeProvider } from './components/providers/theme-provider.tsx'
 import MonitorEmpty from './pages/monitor-empty.tsx'
+import About from './pages/about.tsx'
+import BackLayout from './layouts/back-layout.tsx'
 
 const rootRoute = createRootRoute({
   component: BaseLayout,
@@ -47,6 +50,12 @@ const textRoute = createRoute({
   getParentRoute: () => rootRoute,
   id: 'text',
   component: TextLayout,
+})
+
+const riceRoute = createRoute({
+  getParentRoute: () => textRoute,
+  id: 'rice',
+  component: BackLayout,
 })
 
 const indexRoute = createRoute({
@@ -85,8 +94,14 @@ const settingsRoute = createRoute({
   component: Settings,
 })
 
+const aboutRoute = createRoute({
+  getParentRoute: () => riceRoute,
+  path: ABOUT_PATH,
+  component: About,
+})
+
 const monitorRoute = createRoute({
-  getParentRoute: () => textRoute,
+  getParentRoute: () => riceRoute,
   path: MONITOR_PATH,
   component: MonitorEmpty,
 })
@@ -106,7 +121,10 @@ const routeTree = rootRoute.addChildren([
     tetrisRoute,
     snakeRoute,
   ]),
-  textRoute.addChildren([monitorRoute, stayRoute]),
+  textRoute.addChildren([
+    riceRoute.addChildren([aboutRoute, monitorRoute]),
+    stayRoute,
+  ]),
 ])
 
 const hashHistory = createHashHistory()
