@@ -149,7 +149,6 @@ export function useEmptyProvider({
         )
       }
       setIgnoreCount((i) => i + 1)
-
       setInterfereAllowed(false)
     },
     [setInterfereAllowed, ignoreCount],
