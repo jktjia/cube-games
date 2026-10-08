@@ -1,5 +1,4 @@
 /// <reference types="vitest/config" />
-import { resolve } from 'node:path'
 import { defineConfig } from 'vite'
 import viteReact from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
@@ -17,7 +16,7 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@': resolve(import.meta.dirname, './src'),
+      '@': new URL('./src/', import.meta.url).pathname,
     },
   },
   base: 'https://jktjia.github.io/cube-games',

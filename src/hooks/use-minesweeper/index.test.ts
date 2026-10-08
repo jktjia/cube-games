@@ -708,6 +708,7 @@ test('uses local storage if applicable', () => {
       width,
       height,
       mineCount: count,
+      startTime: new Date('2026-10-08T00:33:22.744Z'),
     }),
   )
   localStorage.setItem('minesweeper', encrypted)
@@ -721,4 +722,5 @@ test('uses local storage if applicable', () => {
 
   expect(result.current.mines).toStrictEqual(mines)
   expect(result.current.tiles).toStrictEqual(tiles)
+  expect(result.current.startTime).toEqual(new Date('2026-10-08T00:33:22.744Z'))
 })
