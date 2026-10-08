@@ -30,7 +30,7 @@ export default function useMinesweeper(
         localState.height == height &&
         localState.mineCount == mineCount
       ) {
-        return localState
+        return { ...localState, startTime: new Date(localState.startTime) }
       }
     }
     return {
@@ -70,18 +70,6 @@ export default function useMinesweeper(
     localStorage.setItem('minesweeper', strState)
   }, [gameState])
 
-  // const updateLocal = (state: MinesweeperState) => {
-  //   const strState = encrypt(JSON.stringify(state))
-  //   localStorage.setItem('minesweeper', strState)
-  // }
-
-  // const restart = useCallback(() => {
-  //   setMines(undefined)
-  //   const newTiles = initTiles(width, height)
-  //   setTiles(newTiles)
-  //   updateLocal({ mines: undefined, tiles: newTiles, width, height, mineCount })
-  // }, [width, height, mineCount, setMines, setTiles, updateLocal, turns])
-
   const restart = useCallback(() => {
     setGameState({
       tiles: initTiles(width, height),
@@ -106,7 +94,6 @@ export default function useMinesweeper(
           setGameState((s) => ({ ...s, tiles: dup }))
           setTurns((t) => t + 1)
         }
-        // updateLocal({ mines: mines, tiles: tiles, width, height, mineCount })
       }
     },
     [gameState, setTurns],
@@ -139,7 +126,6 @@ export default function useMinesweeper(
     (x: number, y: number) => {
       if (!gameState.mines) {
         const newMines = initMines(x, y, width, height, mineCount)
-        // setMines(newMines)
         const newTiles = revealTile(
           x,
           y,
@@ -150,13 +136,6 @@ export default function useMinesweeper(
         )
         setGameState((s) => ({ ...s, mines: newMines, tiles: newTiles }))
         setTurns((t) => t + 1)
-        // updateLocal({
-        //   mines: newMines,
-        //   tiles: newTiles,
-        //   width,
-        //   height,
-        //   mineCount,
-        // })
       } else {
         const newTiles = revealTile(
           x,
@@ -167,9 +146,7 @@ export default function useMinesweeper(
           gameState.tiles,
         )
         setGameState((s) => ({ ...s, tiles: newTiles }))
-        // setTiles(newTiles)
         setTurns((t) => t + 1)
-        // updateLocal({ mines: mines, tiles: newTiles, width, height, mineCount })
       }
     },
     [gameState, setTurns],
